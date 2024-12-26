@@ -1,0 +1,87 @@
+h1 {
+    text-align: center;
+    color: whitesmoke;
+  }
+  
+  .container {
+    display: flex;
+    margin: 0;
+    height: 100vh;
+    flex-direction: row;
+    background-color: #404040;
+    border-radius: 10px;
+    padding: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .form-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+  }
+  
+  .label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  input, select {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #BFBFBF;
+    font-size: 14px;
+  }
+  
+  button {
+    padding: 12px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  .shape-display {
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Garante que as formas ficam centralizadas */
+    justify-content: center;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .circular-shape, .rectangular-shape {
+    margin-bottom: 20px;
+  }
+  
+  .circular-shape, .rectangular-shape, .prismatica-shape, .esferica-shape, .cilindrica-shape {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+  
+  .prismatica-shape, .cilindrica-shape, .esferica-shape {
+    width: 150px;
+    height: 150px;
+    background-color: rgba(100, 100, 255, 0.1);
+  }
+
+  

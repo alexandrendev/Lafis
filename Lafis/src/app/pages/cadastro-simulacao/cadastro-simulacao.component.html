@@ -1,0 +1,65 @@
+<h1>Nova Simulação</h1>
+<div class="container">
+  <!-- Formulário de Entrada -->
+  <form class="form-container" (ngSubmit)="onSubmit()">
+    <label for="title">Nome/Identificação da simulação:</label>
+    <input type="text" id="title">
+    
+    <label for="emissions">Quantidade de emissões:</label>
+    <input type="number" name="emissions" id="emissions">
+    
+    <label for="apertures">Tipo de Abertura:</label>
+    <select name="apertures" [(ngModel)]="apertureType" id="apertureHeight" (ngModelChange)="onApertureChange()">
+      <option value="circular">Circular</option>
+      <option value="rectangular">Retângular</option>
+    </select>
+
+    <div style="display: flex; flex-direction: column;" *ngIf="apertureType === 'circular'">
+      <label for="apertureRadius">Raio(cm):</label>
+      <input type="number" id="apertureRadius" [(ngModel)]="apertureRadius" name="radius">
+    </div>
+
+    <div style="display: flex; flex-direction: column;" *ngIf="apertureType === 'rectangular'">
+      <label for="apertureHeight">Altura(cm):</label>
+      <input type="number" [(ngModel)]="apertureHeight" name="apertureHeight">
+
+      <label for="apertureWidth">Largura(cm):</label>
+      <input type="number" [(ngModel)]="apertureWidth" name="apertureWidth">
+    </div>
+
+    <label for="fontes">Tipo de Fonte:</label>
+    <select name="fontes" [(ngModel)]="sourceType" id="fontes" (ngModelChange)="onsourceTypeChange()">
+      <option value="prismatica">Prisma Retângular</option>
+      <option value="esferica">Esférica</option>
+      <option value="cilindrica">Cilíndrica</option>
+    </select>
+    
+    <!-- Campos específicos para cada tipo de fonte -->
+    <div *ngIf="sourceType === 'prismatica'" style="display: flex; flex-direction: column;">
+        <label for="prismHeight">Altura do Prisma(cm):</label>
+        <input type="number" id="prismHeight" [(ngModel)]="prismHeight" name="prismHeight">
+        <label for="prismWidth">Largura do Prisma(cm):</label>
+        <input type="number" id="prismWidth" [(ngModel)]="prismWidth" name="prismWidth">
+        <label for="prismDepth">Profundidade do Prisma(cm):</label>
+        <input type="number" name="prismDepth" id="prismDepth" [(ngModel)]="prismDepth">
+    </div>
+
+    <div *ngIf="sourceType === 'esferica'" style="display: flex; flex-direction: column;">
+      <label for="sphereRadius">Raio da Esfera(cm):</label>
+      <input type="number" id="sphereRadius" [(ngModel)]="sphereRadius" name="sphereRadius">
+    </div>
+
+    <div *ngIf="sourceType === 'cilindrica'" style="display: flex; flex-direction: column;">
+      <label for="cylinderHeight">Altura do Cilindro(cm):</label>
+      <input type="number" id="cylinderHeight" [(ngModel)]="cylinderHeight" name="cylinderHeight">
+      <label for="cylinderRadius">Raio do Cilindro(cm):</label>
+      <input type="number" id="cylinderRadius" [(ngModel)]="cylinderRadius" name="cylinderRadius">
+    </div>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <!-- Exibição da Forma e Fonte ao lado -->
+  <div class="threejs-container" style="width: 50%; height: 500px;"></div>
+
+</div>
