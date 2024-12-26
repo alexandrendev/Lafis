@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewInit, ElementRef, HostListener } from '@ang
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';  // Importação do OrbitControls
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { ThreeServiceService } from '../../service/three-service.service';
 
 @Component({
   selector: 'app-cadastro-simulacao',
@@ -34,7 +35,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   private renderer!: THREE.WebGLRenderer;
   private controls!: OrbitControls;
 
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef, private service: ThreeServiceService) {}
 
   ngOnInit(): void {
     this.scene = new THREE.Scene();
@@ -43,25 +44,22 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     const container = this.el.nativeElement.querySelector('.threejs-container');
     
-    // Inicializa o renderizador
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(this.renderer.domElement);
 
     this.scene.background = new THREE.Color('white');
 
-    // Inicializa a câmera
     const aspectRatio = container.clientWidth / container.clientHeight;
     this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
     this.camera.position.z = 5;
-
-    // Adicionando os controles de órbita
+  
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;  // Habilitar amortecimento (movimento suave)
-    this.controls.dampingFactor = 0.25;  // Fator de amortecimento
-    this.controls.screenSpacePanning = false;  // Evitar movimentação em planos 2D
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.25;
+    this.controls.screenSpacePanning = false;
 
-    // Chama a função para renderizar a cena
+
     const axesHelper = new THREE.AxesHelper(1000);
     this.scene.add(axesHelper);
 
@@ -69,12 +67,10 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.animate();
   }
 
-  // Função para renderizar a cena
+
   animate() {
     requestAnimationFrame(() => this.animate());
-
-    // Atualizar controles antes de renderizar
-    this.controls.update();  // Necessário para o amortecimento funcionar
+    this.controls.update();
 
     this.renderer.render(this.scene, this.camera);
   }
@@ -95,7 +91,6 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.updateScene();
   }
 
-
   updateScene(): void {
     this.scene.clear();
 
@@ -103,49 +98,40 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     else if(this.sourceType === 'cilindrica') this.sourceHeight = this.cylinderHeight;
     else this.sourceHeight = this.sphereRadius;
 
-    // Abertura
     if (this.apertureType === 'rectangular') {
-      const geometry = new THREE.BoxGeometry(this.apertureWidth, this.sourceHeight*3, this.apertureHeight);
-      const material = new THREE.MeshNormalMaterial({ wireframe: false, transparent: true, opacity: 0.5 });
-      const prism = new THREE.Mesh(geometry, material);
-      prism.position.y = 0; 
-      prism.position.z = 0; // Posiciona a abertura
+      
+      const prism = this.service.generatePrism(this.apertureHeight,this.sourceHeight * 3, this.apertureWidth, true);
       this.scene.add(prism);
+
     } else if (this.apertureType === 'circular') {
-      const geometry = new THREE.CylinderGeometry(this.apertureRadius, this.apertureRadius, this.sourceHeight * 3, 100,100, false);
-      const material = new THREE.MeshNormalMaterial({ wireframe: false, transparent: true, opacity: 0.5 });
-      const circle = new THREE.Mesh(geometry, material);
-      this.scene.add(circle);
+
+      const cylinder = this.service.generateCylinder(this.sourceHeight * 3, this.apertureRadius, true);
+      this.scene.add(cylinder);
     }
 
-    // Fonte
+  
     if (this.sourceType === 'prismatica') {
-      const geometry = new THREE.BoxGeometry(this.prismWidth, this.prismHeight, this.prismDepth);
-      const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-      const prism = new THREE.Mesh(geometry, material);
-      prism.position.set(0, 0, 0);  // Posiciona o prisma
+
+      const prism = this.service.generatePrism(this.prismHeight,this.prismWidth, this.prismDepth, false);
       this.scene.add(prism);
+    
     } else if (this.sourceType === 'esferica') {
-      const geometry = new THREE.SphereGeometry(this.sphereRadius);
-      const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-      const sphere = new THREE.Mesh(geometry, material);
-      sphere.position.set(0, 0, 0);  // Posiciona a esfera
+
+      const sphere = this.service.generateSphere(this.sphereRadius);
       this.scene.add(sphere);
+
     } else if (this.sourceType === 'cilindrica') {
-      const geometry = new THREE.CylinderGeometry(this.cylinderRadius, this.cylinderRadius, this.cylinderHeight);
-      const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-      const cylinder = new THREE.Mesh(geometry, material);
-      cylinder.position.set(0, 0, 0);  // Posiciona o cilindro
+    
+      const cylinder = this.service.generateCylinder(this.cylinderHeight,this.cylinderRadius,false);
       this.scene.add(cylinder);
+    
     }
   }
 
-  // Manipula a mudança no tipo de abertura
   onApertureChange(): void {
     this.updateScene();
   }
 
-  // Manipula a mudança no tipo de fonte
   onsourceTypeChange(): void {
     this.updateScene();
   }
