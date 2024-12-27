@@ -109,7 +109,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       this.scene.add(cylinder);
     }
 
-  
+
     if (this.sourceType === 'prismatica') {
 
       const prism = this.service.generatePrism(this.prismHeight,this.prismWidth, this.prismDepth, false);
