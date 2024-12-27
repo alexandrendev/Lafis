@@ -1,26 +1,46 @@
-<div class="card-container">
-    <div class="card-buttons">
-        <div class="button">
-            <img src="/assets/delete.svg">
-            <a href="/"></a>
+<div *ngIf="simulations.length > 0; else notFound">
+    <div *ngFor="let simulation of simulations" class="card-container">
+        <div class="card-header">
+        </div>
+        <h1>{{simulation.id}}</h1>
+    
+        <div class="info">
+            <div>
+                <label for="aperture">Tipo de Abertura:</label>
+                <span id="aperture">{{apertureType}}</span>
+            </div>
+            <div>
+                <label for="source">Tipo de Fonte:</label>
+                <span id="source">{{sourceType}}</span>    
+            </div>
+            <div>
+                <label for="emissions">Quantidade de Emissões:</label>
+                <span id="source">{{simulation.emissions}}</span>    
+            </div>
+            <div>
+                <label for="emissions">Status:</label>
+                <span id="source">{{simulation.status}}</span>                
+            </div>
+        </div>
+    
+        <div class="card-footer">
+            <div class="button delete">
+                <a href=#>  
+                    <img src="/assets/delete.svg">
+                    <p>Excluir</p>
+                </a>
+            </div>
+    
+            <div class="button information">
+                <a href=#>
+                    <img src="/assets/info-white.svg">
+                    <p>Detalhes</p>
+                </a>
+            </div>
         </div>
     </div>
-    <h1>{{id}}</h1>
-
-    <div class="info">
-        <label for="aperture">Tipo de Abertura:</label>
-        <span id="aperture">{{apertureType}}</span>
-
-        <label for="source">Tipo de Fonte:</label>
-        <span id="source">{{sourceType}}</span>
-
-        <label for="emissions">Quantidade de Emissões:</label>
-        <span id="source">{{emissions}}</span>
-
-
-    </div>
-
-    <button>Detalhes</button>
-
-
 </div>
+
+<ng-template #notFound>
+    <div>Nenhuma Simulação Encontrada :( </div>
+</ng-template>
