@@ -41,7 +41,7 @@ export class ThreeServiceService {
     if(aperture === false){
         material = new THREE.MeshBasicMaterial({ color: 'blue', wireframe: false});    
     }
-    else{material = new THREE.MeshNormalMaterial({wireframe: true, transparent: true, opacity: 0.5});}
+    else{material = new THREE.MeshNormalMaterial({wireframe: false, transparent: true, opacity: 0.5});}
 
     const cylinder = new THREE.Mesh(geometry, material);
     cylinder.position.set(0, 0, 0);

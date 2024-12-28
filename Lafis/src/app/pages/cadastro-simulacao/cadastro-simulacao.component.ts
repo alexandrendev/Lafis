@@ -103,7 +103,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     const aspectRatio = container.clientWidth / container.clientHeight;
     this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    this.camera.position.z = 5;
+    this.camera.position.set(0,10,5);
   
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
