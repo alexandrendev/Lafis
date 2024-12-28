@@ -100,11 +100,11 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(this.renderer.domElement);
 
-    this.scene.background = new THREE.Color('white');
+    this.scene.background = new THREE.Color('#CCCDC8'); 
 
     const aspectRatio = container.clientWidth / container.clientHeight;
-    this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    this.camera.position.set(0,10,50);
+    this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 2000);
+    this.camera.position.set(0,1,50);
   
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;

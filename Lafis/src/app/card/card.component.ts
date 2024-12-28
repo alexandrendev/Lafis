@@ -27,7 +27,7 @@ export class CardComponent implements OnInit{
       this.simulations = data;
      },
      (error) => {
-      console.error('Erro ao carregar simulações', error);  // Tratamento de erro
+      console.error('Erro ao carregar simulações', error);
     }
     );
 
