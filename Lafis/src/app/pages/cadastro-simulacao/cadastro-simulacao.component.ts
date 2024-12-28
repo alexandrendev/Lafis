@@ -27,6 +27,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.form = new FormGroup({
       emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),  // 'emissions' com valor mínimo de 1
       apertureType: new FormControl<string>('', Validators.required),
+      heightToAperture: new FormControl<number>(0, Validators.required),
       apertureRadius: new FormControl<number>(0),
       apertureHeight: new FormControl<number>(0),
       apertureWidth: new FormControl<number>(0),
@@ -103,7 +104,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     const aspectRatio = container.clientWidth / container.clientHeight;
     this.camera = new THREE.PerspectiveCamera(75, aspectRatio, 0.1, 1000);
-    this.camera.position.set(0,10,5);
+    this.camera.position.set(0,10,50);
   
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
@@ -132,24 +133,20 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
   updateScene(): void {
     this.scene.clear();
-    let { apertureType, sourceType, apertureHeight, apertureWidth, apertureRadius, 
+    let { apertureType, sourceType, heightToAperture, apertureHeight, apertureWidth, apertureRadius, 
       prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius } = this.form.value;
 
     let sourceHeight;
 
-    if(sourceType === 'prismatica') sourceHeight = prismHeight;
-    else if(sourceType === 'cilindrica') sourceHeight = cylinderHeight;
-    else sourceHeight = sphereRadius;
-
 
     if (apertureType === 'rectangular') {
       
-      const prism = this.service.generatePrism(apertureHeight,sourceHeight * 3, apertureWidth, true);
+      const prism = this.service.generatePrism(heightToAperture, apertureHeight, apertureWidth, true);
       this.scene.add(prism);
 
     } else if (apertureType === 'circular') {
 
-      const cylinder = this.service.generateCylinder(sourceHeight * 3, apertureRadius, true);
+      const cylinder = this.service.generateCylinder(heightToAperture, apertureRadius, true);
       this.scene.add(cylinder);
     }
 
@@ -170,6 +167,9 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       this.scene.add(cylinder);
     
     }
+
+    const axesHelper = new THREE.AxesHelper(10)
+    this.scene.add(axesHelper);
   }
 
   onApertureChange(): void {

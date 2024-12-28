@@ -54,34 +54,10 @@ h1 {
   button:hover {
     background-color: #45a049;
   }
-  
-  .shape-display {
-    background-color: grey;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Garante que as formas ficam centralizadas */
-    justify-content: center;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .circular-shape, .rectangular-shape {
-    margin-bottom: 20px;
-  }
-  
-  .circular-shape, .rectangular-shape, .prismatica-shape, .esferica-shape, .cilindrica-shape {
-    width: 200px;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-  }
-  
-  .prismatica-shape, .cilindrica-shape, .esferica-shape {
-    width: 150px;
-    height: 150px;
-    background-color: rgba(100, 100, 255, 0.1);
-  }
 
+  .threejs-container{
+    canvas{
+      border-radius: 20px;
+    }
+  }
   

@@ -12,7 +12,7 @@ export class ThreeServiceService {
     const geometry = new THREE.SphereGeometry(radius);
     const material = new THREE.MeshBasicMaterial({color: 'blue', wireframe: false})
     const sphere = new THREE.Mesh(geometry, material);
-    sphere.position.set(0, 0, 0);
+    sphere.position.set(0, radius, 0);
     return sphere;
   }
 
@@ -21,12 +21,12 @@ export class ThreeServiceService {
     const geometry = new THREE.BoxGeometry(width, height, depth);
     let material;
     if(aperture === false){
-        material = new THREE.MeshBasicMaterial({color: 'blue',wireframe: false });
+        material = new THREE.MeshBasicMaterial({color: 'blue',wireframe: false});
     }
     else {material = new THREE.MeshNormalMaterial({wireframe: false, transparent: true, opacity: 0.5});}
     
     const prism = new THREE.Mesh(geometry, material);
-    prism.position.set(0,0,0); 
+    prism.position.set(0, height / 2, 0); 
     return prism;
   }
 
@@ -39,12 +39,12 @@ export class ThreeServiceService {
     );
     let material;
     if(aperture === false){
-        material = new THREE.MeshBasicMaterial({ color: 'blue', wireframe: false});    
+        material = new THREE.MeshBasicMaterial({ color: 'blue', wireframe: true});    
     }
     else{material = new THREE.MeshNormalMaterial({wireframe: false, transparent: true, opacity: 0.5});}
 
     const cylinder = new THREE.Mesh(geometry, material);
-    cylinder.position.set(0, 0, 0);
+    cylinder.position.set(0, cylinderHeight / 2 , 0);
     return cylinder;
   }
 }

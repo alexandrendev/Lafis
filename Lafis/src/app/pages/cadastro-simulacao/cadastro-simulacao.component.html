@@ -1,4 +1,4 @@
-<h1>Nova Simulação</h1>
+<h1 style="color: #26538C; margin-top: 20px;">Nova Simulação</h1>
 <div class="container">
   <!-- Formulário de Entrada -->
   <form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
@@ -13,18 +13,20 @@
       <option value="circular">Circular</option>
       <option value="rectangular">Retângular</option>
     </select>
+    <label for="heightToAperture">Altura até a abertura:</label>
+    <input type="number" name="heightToAperture" id="heightToAperture" formControlName="heightToAperture" (change)="onApertureChange()">
 
     <div style="display: flex; flex-direction: column;" *ngIf="form.get('apertureType')?.value === 'circular'">
       <label for="apertureRadius">Raio(cm):</label>
-      <input type="number" id="apertureRadius" formControlName="apertureRadius" name="radius">
+      <input type="number" id="apertureRadius" formControlName="apertureRadius" name="radius" (change)="updateScene()">
     </div>
 
     <div style="display: flex; flex-direction: column;" *ngIf="form.get('apertureType')?.value === 'rectangular'">
       <label for="apertureHeight">Altura(cm):</label>
-      <input type="number" formControlName="apertureHeight" name="apertureHeight">
+      <input type="number" formControlName="apertureHeight" name="apertureHeight" (change)="updateScene()">
 
       <label for="apertureWidth">Largura(cm):</label>
-      <input type="number" formControlName="apertureWidth" name="apertureWidth">
+      <input type="number" formControlName="apertureWidth" name="apertureWidth" (change)="updateScene()">
     </div>
 
     <label for="fontes">Tipo de Fonte:</label>
