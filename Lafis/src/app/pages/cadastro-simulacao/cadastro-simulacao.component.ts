@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ElementRef, HostListener } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -7,28 +7,12 @@ import { ThreeServiceService } from '../../service/three-service.service';
 
 @Component({
   selector: 'app-cadastro-simulacao',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './cadastro-simulacao.component.html',
   styleUrls: ['./cadastro-simulacao.component.scss']
 })
 export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
-  apertureType: string = 'rectangular';
-  sourceType: string = 'prismatica';
-  sourceHeight!: number;
-
-
-  apertureRadius!: number;
-  apertureHeight!: number;
-  apertureWidth!: number;
-
-  
-  prismWidth!: number;
-  prismHeight!: number;
-  prismDepth!: number;
-
-  sphereRadius!: number;
-  cylinderRadius!: number;
-  cylinderHeight!: number;
+  form!: FormGroup;
 
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
@@ -39,8 +23,75 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.scene = new THREE.Scene();
+
+    this.form = new FormGroup({
+      emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),  // 'emissions' com valor mínimo de 1
+      apertureType: new FormControl<string>('', Validators.required),
+      apertureRadius: new FormControl<number>(0),
+      apertureHeight: new FormControl<number>(0),
+      apertureWidth: new FormControl<number>(0),
+      sourceType: new FormControl<string>('prismatica', Validators.required),
+      prismHeight: new FormControl<number>(0),
+      prismWidth: new FormControl<number>(0),
+      prismDepth: new FormControl<number>(0),
+      sphereRadius: new FormControl<number>(0),
+      cylinderHeight: new FormControl<number>(0),
+      cylinderRadius: new FormControl<number>(0)
+    });
+    
+    this.form.get('apertureType')?.valueChanges.subscribe(value => {
+      this.updateApertureFields(value);
+    });
+    
+    this.form.get('sourceType')?.valueChanges.subscribe(value => {
+      this.updateSourceFields(value);
+    });
   }
 
+  updateApertureFields(value: string){
+    if(value === 'circular'){
+      this.form.get('apertureRadius')?.setValidators(Validators.required);
+      this.form.get('apertureHeight')?.clearValidators();
+      this.form.get('apertureWidth')?.clearValidators();
+    } else if (value === 'rectangular') {
+      this.form.get('apertureHeight')?.setValidators(Validators.required);
+      this.form.get('apertureWidth')?.setValidators(Validators.required);
+      this.form.get('apertureRadius')?.clearValidators();
+    }
+    this.form.get('apertureRadius')?.updateValueAndValidity();
+    this.form.get('apertureHeight')?.updateValueAndValidity();
+    this.form.get('apertureWidth')?.updateValueAndValidity();
+  }
+  updateSourceFields(value: string){
+    if (value === 'prismatica') {
+      this.form.get('prismHeight')?.setValidators(Validators.required);
+      this.form.get('prismWidth')?.setValidators(Validators.required);
+      this.form.get('prismDepth')?.setValidators(Validators.required);
+      this.form.get('sphereRadius')?.clearValidators();
+      this.form.get('cylinderHeight')?.clearValidators();
+      this.form.get('cylinderRadius')?.clearValidators();
+    } else if (value === 'esferica') {
+      this.form.get('sphereRadius')?.setValidators(Validators.required);
+      this.form.get('prismHeight')?.clearValidators();
+      this.form.get('prismWidth')?.clearValidators();
+      this.form.get('prismDepth')?.clearValidators();
+      this.form.get('cylinderHeight')?.clearValidators();
+      this.form.get('cylinderRadius')?.clearValidators();
+    } else if (value === 'cilindrica') {
+      this.form.get('cylinderHeight')?.setValidators(Validators.required);
+      this.form.get('cylinderRadius')?.setValidators(Validators.required);
+      this.form.get('prismHeight')?.clearValidators();
+      this.form.get('prismWidth')?.clearValidators();
+      this.form.get('prismDepth')?.clearValidators();
+      this.form.get('sphereRadius')?.clearValidators();
+    }
+    this.form.get('prismHeight')?.updateValueAndValidity();
+    this.form.get('prismWidth')?.updateValueAndValidity();
+    this.form.get('prismDepth')?.updateValueAndValidity();
+    this.form.get('sphereRadius')?.updateValueAndValidity();
+    this.form.get('cylinderHeight')?.updateValueAndValidity();
+    this.form.get('cylinderRadius')?.updateValueAndValidity();
+  }
   ngAfterViewInit(): void {
     const container = this.el.nativeElement.querySelector('.threejs-container');
     
@@ -76,53 +127,46 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(): void {
-    console.log({
-      apertureType: this.apertureType,
-      sourceType: this.sourceType,
-      apertureRadius: this.apertureRadius,
-      apertureHeight: this.apertureHeight,
-      apertureWidth: this.apertureWidth,
-      prismWidth: this.prismWidth,
-      prismHeight: this.prismHeight,
-      sphereRadius: this.sphereRadius,
-      cylinderRadius: this.cylinderRadius,
-      cylinderHeight: this.cylinderHeight
-    });
     this.updateScene();
   }
 
   updateScene(): void {
     this.scene.clear();
+    let { apertureType, sourceType, apertureHeight, apertureWidth, apertureRadius, 
+      prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius } = this.form.value;
 
-    if(this.sourceType === 'prismatica') this.sourceHeight = this.prismHeight;
-    else if(this.sourceType === 'cilindrica') this.sourceHeight = this.cylinderHeight;
-    else this.sourceHeight = this.sphereRadius;
+    let sourceHeight;
 
-    if (this.apertureType === 'rectangular') {
+    if(sourceType === 'prismatica') sourceHeight = prismHeight;
+    else if(sourceType === 'cilindrica') sourceHeight = cylinderHeight;
+    else sourceHeight = sphereRadius;
+
+
+    if (apertureType === 'rectangular') {
       
-      const prism = this.service.generatePrism(this.apertureHeight,this.sourceHeight * 3, this.apertureWidth, true);
+      const prism = this.service.generatePrism(apertureHeight,sourceHeight * 3, apertureWidth, true);
       this.scene.add(prism);
 
-    } else if (this.apertureType === 'circular') {
+    } else if (apertureType === 'circular') {
 
-      const cylinder = this.service.generateCylinder(this.sourceHeight * 3, this.apertureRadius, true);
+      const cylinder = this.service.generateCylinder(sourceHeight * 3, apertureRadius, true);
       this.scene.add(cylinder);
     }
 
 
-    if (this.sourceType === 'prismatica') {
+    if (sourceType === 'prismatica') {
 
-      const prism = this.service.generatePrism(this.prismHeight,this.prismWidth, this.prismDepth, false);
+      const prism = this.service.generatePrism(prismHeight, prismWidth, prismDepth, false);
       this.scene.add(prism);
     
-    } else if (this.sourceType === 'esferica') {
+    } else if (sourceType === 'esferica') {
 
-      const sphere = this.service.generateSphere(this.sphereRadius);
+      const sphere = this.service.generateSphere(sphereRadius);
       this.scene.add(sphere);
 
-    } else if (this.sourceType === 'cilindrica') {
+    } else if (sourceType === 'cilindrica') {
     
-      const cylinder = this.service.generateCylinder(this.cylinderHeight,this.cylinderRadius,false);
+      const cylinder = this.service.generateCylinder(cylinderHeight, cylinderRadius,false);
       this.scene.add(cylinder);
     
     }

@@ -2,16 +2,16 @@
     <div *ngFor="let simulation of simulations" class="card-container">
         <div class="card-header">
         </div>
-        <h1>{{simulation.id}}</h1>
+        <h2>{{simulation.id}}</h2>
     
         <div class="info">
             <div>
                 <label for="aperture">Tipo de Abertura:</label>
-                <span id="aperture">{{apertureType}}</span>
+                <span id="aperture">{{simulation.apertureType}}</span>
             </div>
             <div>
                 <label for="source">Tipo de Fonte:</label>
-                <span id="source">{{sourceType}}</span>    
+                <span id="source">{{simulation.sourceType}}</span>    
             </div>
             <div>
                 <label for="emissions">Quantidade de Emissões:</label>
