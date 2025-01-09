@@ -25,7 +25,8 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.scene = new THREE.Scene();
 
     this.form = new FormGroup({
-      emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),  // 'emissions' com valor mínimo de 1
+      emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      increment: new FormControl<number>(0),
       apertureType: new FormControl<string>('', Validators.required),
       heightToAperture: new FormControl<number>(0, Validators.required),
       apertureRadius: new FormControl<number>(0),
