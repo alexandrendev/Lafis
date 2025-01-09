@@ -4,14 +4,17 @@
   <form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
     <!-- <label for="title">Nome/Identificação da simulação:</label>
     <input type="text" id="title"> -->
-    
+
     <label for="emissions">Quantidade de emissões:</label>
     <input type="number" name="emissions" formControlName="emissions">
 
     <label for="increment">Incremento na altura da fonte (cm):</label>
     <input type="number" name="increment" formControlName="increment">
-    
-    <label for="apertures">Tipo de Abertura:</label>
+
+    <label for="finalHeight">Altura final da fonte (cm):</label>
+    <input type="number" name="increment" formControlName="increment">
+
+    <label for="apertures">Tipo de abertura:</label>
     <select name="apertures" formControlName="apertureType" id="apertureHeight" (change)="onApertureChange()">
       <option value="circular">Circular</option>
       <option value="rectangular">Retângular</option>
@@ -32,39 +35,39 @@
       <input type="number" formControlName="apertureWidth" name="apertureWidth" (change)="updateScene()">
     </div>
 
-    <label for="fontes">Tipo de Fonte:</label>
+    <label for="fontes">Tipo de fonte:</label>
     <select name="fontes" formControlName="sourceType" id="fontes" (change)="onsourceTypeChange()">
-      <option value="prismatica">Prisma Retângular</option>
+      <option value="prismatica">Prisma retângular</option>
       <option value="esferica">Esférica</option>
       <option value="cilindrica">Cilíndrica</option>
     </select>
-    
+
     <!-- Campos específicos para cada tipo de fonte -->
     <div *ngIf="form.get('sourceType')?.value === 'prismatica'" style="display: flex; flex-direction: column;">
-        <label for="prismHeight">Altura do Prisma (cm):</label>
+        <label for="prismHeight">Altura do prisma (cm):</label>
         <input type="number" id="prismHeight" formControlName="prismHeight" name="prismHeight" (change)="updateScene()">
-        <label for="prismWidth">Largura do Prisma (cm):</label>
+        <label for="prismWidth">Largura do prisma (cm):</label>
         <input type="number" id="prismWidth" formControlName="prismWidth" name="prismWidth" (change)="updateScene()">
-        <label for="prismDepth">Profundidade do Prisma (cm):</label>
+        <label for="prismDepth">Profundidade do prisma (cm):</label>
         <input type="number" name="prismDepth" id="prismDepth" formControlName="prismDepth" (change)="updateScene()">
     </div>
 
     <div *ngIf="form.get('sourceType')?.value === 'esferica'" style="display: flex; flex-direction: column;">
-      <label for="sphereRadius">Raio da Esfera (cm):</label>
+      <label for="sphereRadius">Raio da esfera (cm):</label>
       <input type="number" id="sphereRadius" formControlName="sphereRadius" name="sphereRadius" (change)="updateScene()">
     </div>
 
     <div *ngIf="form.get('sourceType')?.value === 'cilindrica'" style="display: flex; flex-direction: column;">
-      <label for="cylinderHeight">Altura do Cilindro (cm):</label>
+      <label for="cylinderHeight">Altura do cilindro (cm):</label>
       <input type="number" id="cylinderHeight" formControlName="cylinderHeight" name="cylinderHeight" (change)="updateScene()">
-      <label for="cylinderRadius">Raio do Cilindro (cm):</label>
+      <label for="cylinderRadius">Raio do cilindro (cm):</label>
       <input type="number" id="cylinderRadius" formControlName="cylinderRadius" name="cylinderRadius" (change)="updateScene()">
     </div>
 
     <button type="submit">Enviar</button>
   </form>
 
-  <!-- Exibição da Forma e Fonte ao lado -->  
+  <!-- Exibição da Forma e Fonte ao lado -->
   <div class="threejs-container" style="width: 50%; height: 500px;"></div>
 
-</div>  
+</div>

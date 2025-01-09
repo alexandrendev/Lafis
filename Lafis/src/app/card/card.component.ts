@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../service/api.service';
 import { CommonModule } from '@angular/common';
-// import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-card',
@@ -9,29 +8,25 @@ import { CommonModule } from '@angular/common';
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class CardComponent implements OnInit{
+export class CardComponent implements OnInit {
+  simulations: Array<{
+    id: string;
+    apertureType: string;
+    sourceType: string;
+    emissions: number;
+    status: string;
+  }> = [];
 
-  id: string = 'id teste';
-  apertureType: string = 'abertura';
-  sourceType: string = 'fonte';
-  emissions: number = 219093;
-  status: string = 'Rodando'
+  constructor(private api: ApiService) {}
 
-  simulations:any[] = [];
-
-  constructor(private api: ApiService){}
-
-  ngOnInit(): void {    
-    this.api.getAllSimulations().subscribe(
-     (data)=>{
-      this.simulations = data;
-     },
-     (error) => {
-      console.error('Erro ao carregar simulações', error);
-    }
-    );
-
-    console.log(this.simulations);
+  ngOnInit(): void {
+    this.api
+      .getAllSimulations()
+      .then((simulations) => {
+        this.simulations = simulations;
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar simulações:', error);
+      });
   }
-
 }

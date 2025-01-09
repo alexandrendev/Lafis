@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ThreeServiceService } from '../../service/three-service.service';
+import { ApiService } from '../../service/api.service';
 
 @Component({
   selector: 'app-cadastro-simulacao',
@@ -19,7 +20,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   private renderer!: THREE.WebGLRenderer;
   private controls!: OrbitControls;
 
-  constructor(private el: ElementRef, private service: ThreeServiceService) {}
+  constructor(private el: ElementRef, private service: ThreeServiceService, private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.scene = new THREE.Scene();
@@ -27,6 +28,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.form = new FormGroup({
       emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
       increment: new FormControl<number>(0),
+      finalHeight: new FormControl<number>(0),
       apertureType: new FormControl<string>('', Validators.required),
       heightToAperture: new FormControl<number>(0, Validators.required),
       apertureRadius: new FormControl<number>(0),
@@ -40,11 +42,11 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       cylinderHeight: new FormControl<number>(0),
       cylinderRadius: new FormControl<number>(0)
     });
-    
+
     this.form.get('apertureType')?.valueChanges.subscribe(value => {
       this.updateApertureFields(value);
     });
-    
+
     this.form.get('sourceType')?.valueChanges.subscribe(value => {
       this.updateSourceFields(value);
     });
@@ -96,17 +98,17 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     const container = this.el.nativeElement.querySelector('.threejs-container');
-    
+
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(this.renderer.domElement);
 
-    this.scene.background = new THREE.Color('#CCCDC8'); 
+    this.scene.background = new THREE.Color('#CCCDC8');
 
     const aspectRatio = container.clientWidth / container.clientHeight;
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 2000);
     this.camera.position.set(0,1,50);
-  
+
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.25;
@@ -129,19 +131,24 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(): void {
-    this.updateScene();
+    this.apiService.createNewSimulation(
+      this.form.value.emissions,
+      this.form.value.increment,
+      this.form.value.heightToAperture
+    );
+
   }
 
   updateScene(): void {
     this.scene.clear();
-    let { apertureType, sourceType, heightToAperture, apertureHeight, apertureWidth, apertureRadius, 
+    let { apertureType, sourceType, heightToAperture, apertureHeight, apertureWidth, apertureRadius,
       prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius } = this.form.value;
 
     let sourceHeight;
 
 
     if (apertureType === 'rectangular') {
-      
+
       const prism = this.service.generatePrism(heightToAperture, apertureHeight, apertureWidth, true);
       this.scene.add(prism);
 
@@ -156,17 +163,17 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
       const prism = this.service.generatePrism(prismHeight, prismWidth, prismDepth, false);
       this.scene.add(prism);
-    
+
     } else if (sourceType === 'esferica') {
 
       const sphere = this.service.generateSphere(sphereRadius);
       this.scene.add(sphere);
 
     } else if (sourceType === 'cilindrica') {
-    
+
       const cylinder = this.service.generateCylinder(cylinderHeight, cylinderRadius,false);
       this.scene.add(cylinder);
-    
+
     }
 
     const axesHelper = new THREE.AxesHelper(10)

@@ -10,14 +10,45 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  createNewSimulation(): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/new`, {});
+  createNewSimulation(emissions: number, increment: number, finalHeight: number): Promise<any> {
+    const body = { emissions, increment, finalHeight };
+
+    return fetch(`${this.apiUrl}/new`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({body})
+    })
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`Erro ao criar nova simulação: ${response.statusText}`);
+      }
+      return response.json();
+    }).catch(error => {
+      throw new Error(`Erro ao criar nova simulação: ${error}`);
+    });
   }
 
 
-  setRectangularAperture(simulationId: string, height: number, width: number, apertureHeight: number): Observable<any> {
+  setRectangularAperture(simulationId: string, height: number, width: number, apertureHeight: number): Promise<any> {
     const body = { simulationId, height, width, apertureHeight };
-    return this.http.patch<any>(`${this.apiUrl}/rectangular`, body);
+
+    return fetch(`${this.apiUrl}/rectangular`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`Erro ao definir abertura retângular: ${response.statusText}`);
+      }
+      return response.json();
+    }).catch(error => {
+      throw new Error(`Erro ao definir abertura retângular: ${error}`);
+    });
   }
 
   setCircularAperture(simulationId: string, radius: number, height: number): Observable<any> {
@@ -43,8 +74,17 @@ export class ApiService {
     return this.http.patch<any>(`${this.apiUrl}/source/spherical`, body);
   }
 
-  
-  getAllSimulations(): Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}/all`);
+
+  getAllSimulations(): Promise<any[]>{
+    // return this.http.get<any[]>(`${this.apiUrl}/all`);
+    return fetch(`${this.apiUrl}/all`)
+      .then(response => {
+        if(!response.ok) {
+          throw new Error(`Erro ao obter todas as simulações: ${response.statusText}`);
+        }
+        return response.json();
+      }).catch(error => {
+        throw new Error(`Erro ao obter todas as simulações: ${error}`);
+      });
   }
 }
