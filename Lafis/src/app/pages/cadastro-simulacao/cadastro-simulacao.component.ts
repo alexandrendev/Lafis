@@ -27,14 +27,13 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     this.form = new FormGroup({
       emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      increment: new FormControl<number>(0),
-      finalHeight: new FormControl<number>(0),
+      sourceZAxisHeight: new FormControl<number>(0),
       apertureType: new FormControl<string>('', Validators.required),
       heightToAperture: new FormControl<number>(0, Validators.required),
       apertureRadius: new FormControl<number>(0),
       apertureHeight: new FormControl<number>(0),
       apertureWidth: new FormControl<number>(0),
-      sourceType: new FormControl<string>('prismatica', Validators.required),
+      sourceType: new FormControl<string>('', Validators.required),
       prismHeight: new FormControl<number>(0),
       prismWidth: new FormControl<number>(0),
       prismDepth: new FormControl<number>(0),
@@ -50,6 +49,63 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.form.get('sourceType')?.valueChanges.subscribe(value => {
       this.updateSourceFields(value);
     });
+  }
+
+  onSubmit(): void {
+    const response = this.apiService.createNewSimulation(
+      this.form.value.emissions,
+      this.form.value.sourceZAxisHeight
+    ).then(response => {
+
+      this.setApertureRequest(response.simulationId);
+
+      this.setSourceRequest(response.simulationId);
+
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+  setApertureRequest(simulationId: string): Promise<any> {
+    if (this.form.get('apertureType')?.value === 'circular') {
+      return this.apiService.setCircularAperture(
+        simulationId,
+        this.form.value.apertureRadius,
+        this.form.value.apertureZAxisHeight
+      );
+    } else if (this.form.get('apertureType')?.value === 'rectangular') {
+      return this.apiService.setRectangularAperture(
+        simulationId,
+        this.form.value.apertureHeight,
+        this.form.value.apertureWidth,
+        this.form.value.apertureZAxisHeight
+      );
+    }
+    return Promise.reject(new Error('Invalid aperture type'))
+  }
+
+  setSourceRequest(simulationId: string): Promise<any> {
+    if (this.form.get('sourceType')?.value === 'prismatica') {
+      return this.apiService.setCuboidSource(
+        simulationId,
+        this.form.value.prismHeight,
+        this.form.value.prismWidth,
+        this.form.value.prismDepth,
+      );
+    } else if (this.form.get('sourceType')?.value === 'esferica') {
+      return this.apiService.setSphericalSource(
+        simulationId,
+        this.form.value.sphereRadius,
+      );
+    } else if (this.form.get('sourceType')?.value === 'cilindrica') {
+      return this.apiService.setCylindricalSource(
+        simulationId,
+        this.form.value.cylinderHeight,
+        this.form.value.cylinderRadius,
+      );
+    }
+    return Promise.reject(new Error('Invalid source type'));
   }
 
   updateApertureFields(value: string){
@@ -130,14 +186,6 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.renderer.render(this.scene, this.camera);
   }
 
-  onSubmit(): void {
-    this.apiService.createNewSimulation(
-      this.form.value.emissions,
-      this.form.value.increment,
-      this.form.value.heightToAperture
-    );
-
-  }
 
   updateScene(): void {
     this.scene.clear();

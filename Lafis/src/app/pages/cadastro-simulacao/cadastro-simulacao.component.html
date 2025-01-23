@@ -8,10 +8,7 @@
     <label for="emissions">Quantidade de emissões:</label>
     <input type="number" name="emissions" formControlName="emissions">
 
-    <label for="increment">Incremento na altura da fonte (cm):</label>
-    <input type="number" name="increment" formControlName="increment">
-
-    <label for="finalHeight">Altura final da fonte (cm):</label>
+    <label for="sourceZAxisHeight">Altura da fonte no eixo vertical (cm):</label>
     <input type="number" name="increment" formControlName="increment">
 
     <label for="apertures">Tipo de abertura:</label>
@@ -19,19 +16,19 @@
       <option value="circular">Circular</option>
       <option value="rectangular">Retângular</option>
     </select>
-    <label for="heightToAperture">Altura da base até a abertura (cm):</label>
+    <label for="apertureZAxisHeight">Altura da base até a abertura (cm):</label>
     <input type="number" name="heightToAperture" id="heightToAperture" formControlName="heightToAperture" (change)="onApertureChange()">
 
-    <div style="display: flex; flex-direction: column;" *ngIf="form.get('apertureType')?.value === 'circular'">
+    <div *ngIf="form.get('apertureType')?.value === 'circular'" style="display: flex; flex-direction: column;">
       <label for="apertureRadius">Raio (cm):</label>
       <input type="number" id="apertureRadius" formControlName="apertureRadius" name="radius" (change)="updateScene()">
     </div>
 
-    <div style="display: flex; flex-direction: column;" *ngIf="form.get('apertureType')?.value === 'rectangular'">
-      <label for="apertureHeight">Altura (cm):</label>
+    <div *ngIf="form.get('apertureType')?.value === 'rectangular'" style="display: flex; flex-direction: column;">
+      <label for="apertureHeight">Largura no eixo X (cm):</label>
       <input type="number" formControlName="apertureHeight" name="apertureHeight" (change)="updateScene()">
 
-      <label for="apertureWidth">Largura (cm):</label>
+      <label for="apertureWidth">Largura no eixo y (cm):</label>
       <input type="number" formControlName="apertureWidth" name="apertureWidth" (change)="updateScene()">
     </div>
 
