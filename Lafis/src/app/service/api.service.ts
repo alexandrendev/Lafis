@@ -10,15 +10,14 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  createNewSimulation(emissions: number, increment: number, finalHeight: number): Promise<any> {
-    const body = { emissions, increment, finalHeight };
+  createNewSimulation(emissions: number, sourceHeight: number): Promise<any> {
 
     return fetch(`${this.apiUrl}/new`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({body})
+      body: JSON.stringify({emissions, sourceHeight})
     })
     .then(response => {
       if(!response.ok) {
@@ -32,14 +31,13 @@ export class ApiService {
 
 
   setRectangularAperture(simulationId: string, height: number, width: number, apertureHeight: number): Promise<any> {
-    const body = { simulationId, height, width, apertureHeight };
 
     return fetch(`${this.apiUrl}/rectangular`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ simulationId, height, width, apertureHeight })
     })
     .then(response => {
       if(!response.ok) {
@@ -51,27 +49,80 @@ export class ApiService {
     });
   }
 
-  setCircularAperture(simulationId: string, radius: number, height: number): Observable<any> {
-    const body = { simulationId, radius, height };
-    return this.http.patch<any>(`${this.apiUrl}/circular`, body);
+  setCircularAperture(simulationId: string, radius: number, height: number): Promise<any> {
+    return fetch(`${this.apiUrl}/circular`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ simulationId, radius, height })
+    })
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`Erro ao definir abertura circular: ${response.statusText}`);
+      }
+      return response.json();
+    }).catch(error => {
+      throw new Error(`Erro ao definir abertura circular: ${error}`);
+    });
   }
 
 
-  setCylindricalSource(simulationId: string, initialHeight: number, finalHeight: number, increment: number, sourceHeight: number, sourceRadius: number): Observable<any> {
-    const body = { simulationId, initialHeight, finalHeight, increment, sourceHeight, sourceRadius };
-    return this.http.patch<any>(`${this.apiUrl}/source/cylindrical`, body);
+  setCylindricalSource(simulationId: string, sourceHeight: number, sourceRadius: number): Promise<any>{
+      return fetch(`${this.apiUrl}/source/cylindrical`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ simulationId, sourceHeight, sourceRadius })
+      })
+      .then(response => {
+        if(!response.ok) {
+          throw new Error(`Erro ao definir fonte cilindrica: ${response.statusText}`);
+        }
+        return response.json();
+      }) .catch(error => {
+        throw new Error(`Erro ao definir fonte cilindrica: ${error}`);
+      });
   }
 
 
-  setCuboidSource(simulationId: string, sourceHeight: number, sourceWidth: number, initialHeight: number, increment: number): Observable<any> {
-    const body = { simulationId, sourceHeight, sourceWidth, initialHeight, increment };
-    return this.http.patch<any>(`${this.apiUrl}/source/cuboid`, body);
+  setCuboidSource(simulationId: string, sourceHeight: number, sourceWidth: number, sourceDepth: number): Promise<any> {
+    return fetch(`${this.apiUrl}/source/cuboid`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ simulationId, sourceHeight, sourceWidth, sourceDepth })
+    })
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`Erro ao definir fonte cuboide: ${response.statusText}`);
+      }
+      return response.json();
+    }).catch(error => {
+      throw new Error(`Erro ao definir fonte cuboide: ${error}`);
+    });
   }
 
 
-  setSphericalSource(simulationId: string, sourceRadius: number, initialHeight: number, finalHeight: number, increment: number): Observable<any> {
-    const body = { simulationId, sourceRadius, initialHeight, finalHeight, increment };
-    return this.http.patch<any>(`${this.apiUrl}/source/spherical`, body);
+  setSphericalSource(simulationId: string, sourceRadius: number): Promise<any> {
+
+    return fetch(`${this.apiUrl}/source/spherical`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ simulationId, sourceRadius })
+    })
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(`Erro ao definir fonte esférica: ${response.statusText}`);
+      }
+      return response.json();
+    }).catch(error => {
+      throw new Error(`Erro ao definir fonte esférica: ${error}`);
+    });
   }
 
 
