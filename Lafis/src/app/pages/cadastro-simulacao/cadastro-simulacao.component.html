@@ -9,7 +9,7 @@
     <input type="number" name="emissions" formControlName="emissions">
 
     <label for="sourceZAxisHeight">Altura da fonte no eixo vertical (cm):</label>
-    <input type="number" name="increment" formControlName="increment">
+    <input type="number" name="sourceZAxisHeight" formControlName="sourceZAxisHeight">
 
     <label for="apertures">Tipo de abertura:</label>
     <select name="apertures" formControlName="apertureType" id="apertureHeight" (change)="onApertureChange()">
@@ -17,7 +17,7 @@
       <option value="rectangular">Retângular</option>
     </select>
     <label for="apertureZAxisHeight">Altura da base até a abertura (cm):</label>
-    <input type="number" name="heightToAperture" id="heightToAperture" formControlName="heightToAperture" (change)="onApertureChange()">
+    <input type="number" name="apertureZAxisHeight" id="apertureZAxisHeight" formControlName="apertureZAxisHeight" (change)="onApertureChange()">
 
     <div *ngIf="form.get('apertureType')?.value === 'circular'" style="display: flex; flex-direction: column;">
       <label for="apertureRadius">Raio (cm):</label>

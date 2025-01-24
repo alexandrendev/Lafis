@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ElementRef, HostListener } from '@ang
 import { FormGroup, FormsModule, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ThreeServiceService } from '../../service/three-service.service';
 import { ApiService } from '../../service/api.service';
 
@@ -29,7 +29,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
       sourceZAxisHeight: new FormControl<number>(0),
       apertureType: new FormControl<string>('', Validators.required),
-      heightToAperture: new FormControl<number>(0, Validators.required),
+      apertureZAxisHeight: new FormControl<number>(0, Validators.required),
       apertureRadius: new FormControl<number>(0),
       apertureHeight: new FormControl<number>(0),
       apertureWidth: new FormControl<number>(0),
@@ -51,20 +51,28 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit(): void {
-    const response = this.apiService.createNewSimulation(
-      this.form.value.emissions,
-      this.form.value.sourceZAxisHeight
-    ).then(response => {
+  async onSubmit(): Promise<void> {
 
-      this.setApertureRequest(response.simulationId);
+    console.log(this.form.value);
+    try {
+      const response = await this.apiService.createNewSimulation(
+        this.form.value.emissions,
+        this.form.value.sourceZAxisHeight
+      );
 
-      this.setSourceRequest(response.simulationId);
+      await Promise.all([
+        this.setApertureRequest(response.id).catch(err => {
+          console.error("Erro ao setar abertura:", err);
+        }),
+        this.setSourceRequest(response.id).catch(err => {
+          console.error("Erro ao setar fonte:", err);
+        })
+      ]);
 
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      console.log("Simulação criada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao criar a simulação:", error);
+    }
   }
 
   setApertureRequest(simulationId: string): Promise<any> {
@@ -189,7 +197,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
   updateScene(): void {
     this.scene.clear();
-    let { apertureType, sourceType, heightToAperture, apertureHeight, apertureWidth, apertureRadius,
+    let { apertureType, sourceType, apertureZAxisHeight, apertureHeight, apertureWidth, apertureRadius,
       prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius } = this.form.value;
 
     let sourceHeight;
@@ -197,12 +205,12 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     if (apertureType === 'rectangular') {
 
-      const prism = this.service.generatePrism(heightToAperture, apertureHeight, apertureWidth, true);
+      const prism = this.service.generatePrism(apertureZAxisHeight, apertureHeight, apertureWidth, true);
       this.scene.add(prism);
 
     } else if (apertureType === 'circular') {
 
-      const cylinder = this.service.generateCylinder(heightToAperture, apertureRadius, true);
+      const cylinder = this.service.generateCylinder(apertureZAxisHeight, apertureRadius, true);
       this.scene.add(cylinder);
     }
 

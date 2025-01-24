@@ -10,7 +10,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  createNewSimulation(emissions: number, sourceHeight: number): Promise<any> {
+  async createNewSimulation(emissions: number, sourceHeight: number): Promise<any> {
 
     return fetch(`${this.apiUrl}/new`, {
       method: 'POST',
@@ -30,14 +30,17 @@ export class ApiService {
   }
 
 
-  setRectangularAperture(simulationId: string, height: number, width: number, apertureHeight: number): Promise<any> {
+  async setRectangularAperture(simulationId: string, depth: number, width: number, height: number): Promise<any> {
+
+    console.log('ALSDKJALSKDJALKDJALSKDLAKJSDLAKSJDLAKJSDLKASJDLKJ')
+    console.log(simulationId, depth, width, height);
 
     return fetch(`${this.apiUrl}/rectangular`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ simulationId, height, width, apertureHeight })
+      body: JSON.stringify({ simulationId, depth, width, height })
     })
     .then(response => {
       if(!response.ok) {
@@ -49,7 +52,7 @@ export class ApiService {
     });
   }
 
-  setCircularAperture(simulationId: string, radius: number, height: number): Promise<any> {
+  async setCircularAperture(simulationId: string, radius: number, height: number): Promise<any> {
     return fetch(`${this.apiUrl}/circular`, {
       method: 'PATCH',
       headers: {
@@ -68,7 +71,7 @@ export class ApiService {
   }
 
 
-  setCylindricalSource(simulationId: string, sourceHeight: number, sourceRadius: number): Promise<any>{
+  async setCylindricalSource(simulationId: string, sourceHeight: number, sourceRadius: number): Promise<any>{
       return fetch(`${this.apiUrl}/source/cylindrical`, {
         method: 'PATCH',
         headers: {
@@ -87,7 +90,7 @@ export class ApiService {
   }
 
 
-  setCuboidSource(simulationId: string, sourceHeight: number, sourceWidth: number, sourceDepth: number): Promise<any> {
+  async setCuboidSource(simulationId: string, sourceHeight: number, sourceWidth: number, sourceDepth: number): Promise<any> {
     return fetch(`${this.apiUrl}/source/cuboid`, {
       method: 'PATCH',
       headers: {
@@ -106,28 +109,26 @@ export class ApiService {
   }
 
 
-  setSphericalSource(simulationId: string, sourceRadius: number): Promise<any> {
-
+  async setSphericalSource(simulationId: string, sourceRadius: number): Promise<any> {
     return fetch(`${this.apiUrl}/source/spherical`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ simulationId, sourceRadius })
+      body: JSON.stringify({ simulationId, sourceRadius }),
     })
     .then(response => {
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error(`Erro ao definir fonte esférica: ${response.statusText}`);
       }
       return response.json();
-    }).catch(error => {
+    })
+    .catch(error => {
       throw new Error(`Erro ao definir fonte esférica: ${error}`);
     });
   }
 
-
   getAllSimulations(): Promise<any[]>{
-    // return this.http.get<any[]>(`${this.apiUrl}/all`);
     return fetch(`${this.apiUrl}/all`)
       .then(response => {
         if(!response.ok) {
