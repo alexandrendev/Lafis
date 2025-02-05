@@ -10,6 +10,18 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  async findRunning() {
+    return fetch(`${this.apiUrl}/running`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao obter todas as simulações: ${response.statusText}`);
+        }
+        return response.json();
+      }).catch(error => {
+        throw new Error(`Erro ao obter todas as simulações: ${error}`);
+      });
+  }
+
   async createNewSimulation(emissions: number, sourceHeight: number): Promise<any> {
 
     return fetch(`${this.apiUrl}/new`, {
@@ -17,16 +29,16 @@ export class ApiService {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({emissions, sourceHeight})
+      body: JSON.stringify({ emissions, sourceHeight })
     })
-    .then(response => {
-      if(!response.ok) {
-        throw new Error(`Erro ao criar nova simulação: ${response.statusText}`);
-      }
-      return response.json();
-    }).catch(error => {
-      throw new Error(`Erro ao criar nova simulação: ${error}`);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao criar nova simulação: ${response.statusText}`);
+        }
+        return response.json();
+      }).catch(error => {
+        throw new Error(`Erro ao criar nova simulação: ${error}`);
+      });
   }
 
 
@@ -42,14 +54,14 @@ export class ApiService {
       },
       body: JSON.stringify({ simulationId, depth, width, height })
     })
-    .then(response => {
-      if(!response.ok) {
-        throw new Error(`Erro ao definir abertura retângular: ${response.statusText}`);
-      }
-      return response.json();
-    }).catch(error => {
-      throw new Error(`Erro ao definir abertura retângular: ${error}`);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao definir abertura retângular: ${response.statusText}`);
+        }
+        return response.json();
+      }).catch(error => {
+        throw new Error(`Erro ao definir abertura retângular: ${error}`);
+      });
   }
 
   async setCircularAperture(simulationId: string, radius: number, height: number): Promise<any> {
@@ -60,31 +72,31 @@ export class ApiService {
       },
       body: JSON.stringify({ simulationId, radius, height })
     })
-    .then(response => {
-      if(!response.ok) {
-        throw new Error(`Erro ao definir abertura circular: ${response.statusText}`);
-      }
-      return response.json();
-    }).catch(error => {
-      throw new Error(`Erro ao definir abertura circular: ${error}`);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao definir abertura circular: ${response.statusText}`);
+        }
+        return response.json();
+      }).catch(error => {
+        throw new Error(`Erro ao definir abertura circular: ${error}`);
+      });
   }
 
 
-  async setCylindricalSource(simulationId: string, sourceHeight: number, sourceRadius: number): Promise<any>{
-      return fetch(`${this.apiUrl}/source/cylindrical`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ simulationId, sourceHeight, sourceRadius })
-      })
+  async setCylindricalSource(simulationId: string, sourceHeight: number, sourceRadius: number): Promise<any> {
+    return fetch(`${this.apiUrl}/source/cylindrical`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ simulationId, sourceHeight, sourceRadius })
+    })
       .then(response => {
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error(`Erro ao definir fonte cilindrica: ${response.statusText}`);
         }
         return response.json();
-      }) .catch(error => {
+      }).catch(error => {
         throw new Error(`Erro ao definir fonte cilindrica: ${error}`);
       });
   }
@@ -98,14 +110,14 @@ export class ApiService {
       },
       body: JSON.stringify({ simulationId, sourceHeight, sourceWidth, sourceDepth })
     })
-    .then(response => {
-      if(!response.ok) {
-        throw new Error(`Erro ao definir fonte cuboide: ${response.statusText}`);
-      }
-      return response.json();
-    }).catch(error => {
-      throw new Error(`Erro ao definir fonte cuboide: ${error}`);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao definir fonte cuboide: ${response.statusText}`);
+        }
+        return response.json();
+      }).catch(error => {
+        throw new Error(`Erro ao definir fonte cuboide: ${error}`);
+      });
   }
 
 
@@ -117,21 +129,21 @@ export class ApiService {
       },
       body: JSON.stringify({ simulationId, sourceRadius }),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Erro ao definir fonte esférica: ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .catch(error => {
-      throw new Error(`Erro ao definir fonte esférica: ${error}`);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao definir fonte esférica: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .catch(error => {
+        throw new Error(`Erro ao definir fonte esférica: ${error}`);
+      });
   }
 
-  getAllSimulations(): Promise<any[]>{
+  getAllSimulations(): Promise<any[]> {
     return fetch(`${this.apiUrl}/all`)
       .then(response => {
-        if(!response.ok) {
+        if (!response.ok) {
           throw new Error(`Erro ao obter todas as simulações: ${response.statusText}`);
         }
         return response.json();

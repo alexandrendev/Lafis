@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ThreeServiceService } from '../../service/three-service.service';
 import { ApiService } from '../../service/api.service';
+import { NotificationService } from '../../service/notification.service';
 
 @Component({
   selector: 'app-cadastro-simulacao',
@@ -20,7 +21,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   private renderer!: THREE.WebGLRenderer;
   private controls!: OrbitControls;
 
-  constructor(private el: ElementRef, private service: ThreeServiceService, private apiService: ApiService) {}
+  constructor(private el: ElementRef, private service: ThreeServiceService, private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.scene = new THREE.Scene();
@@ -68,7 +69,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
           console.error("Erro ao setar fonte:", err);
         })
       ]);
-
+      alert('Simulação criada com sucesso!');
       console.log("Simulação criada com sucesso!");
     } catch (error) {
       console.error("Erro ao criar a simulação:", error);
@@ -116,8 +117,8 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     return Promise.reject(new Error('Invalid source type'));
   }
 
-  updateApertureFields(value: string){
-    if(value === 'circular'){
+  updateApertureFields(value: string) {
+    if (value === 'circular') {
       this.form.get('apertureRadius')?.setValidators(Validators.required);
       this.form.get('apertureHeight')?.clearValidators();
       this.form.get('apertureWidth')?.clearValidators();
@@ -130,7 +131,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.form.get('apertureHeight')?.updateValueAndValidity();
     this.form.get('apertureWidth')?.updateValueAndValidity();
   }
-  updateSourceFields(value: string){
+  updateSourceFields(value: string) {
     if (value === 'prismatica') {
       this.form.get('prismHeight')?.setValidators(Validators.required);
       this.form.get('prismWidth')?.setValidators(Validators.required);
@@ -171,7 +172,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     const aspectRatio = container.clientWidth / container.clientHeight;
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 2000);
-    this.camera.position.set(0,1,50);
+    this.camera.position.set(0, 1, 50);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
@@ -227,7 +228,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     } else if (sourceType === 'cilindrica') {
 
-      const cylinder = this.service.generateCylinder(cylinderHeight, cylinderRadius,false);
+      const cylinder = this.service.generateCylinder(cylinderHeight, cylinderRadius, false);
       this.scene.add(cylinder);
 
     }
