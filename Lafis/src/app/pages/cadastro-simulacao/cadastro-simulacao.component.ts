@@ -53,28 +53,37 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   }
 
   async onSubmit(): Promise<void> {
-
     console.log(this.form.value);
     try {
       const response = await this.apiService.createNewSimulation(
         this.form.value.emissions,
         this.form.value.sourceZAxisHeight
       );
-
-      await Promise.all([
-        this.setApertureRequest(response.id).catch(err => {
-          console.error("Erro ao setar abertura:", err);
-        }),
-        this.setSourceRequest(response.id).catch(err => {
-          console.error("Erro ao setar fonte:", err);
-        })
-      ]);
-      alert('Simulação criada com sucesso!');
-      console.log("Simulação criada com sucesso!");
+  
+      const apertureRequest = this.setApertureRequest(response.id);
+      const sourceRequest = this.setSourceRequest(response.id);
+  
+      const [apertureResult, sourceResult] = await Promise.allSettled([apertureRequest, sourceRequest]);
+  
+      if (apertureResult.status === 'fulfilled' && sourceResult.status === 'fulfilled') {
+        alert('Simulação criada com sucesso!');
+        console.log("Simulação criada com sucesso!");
+      } else {
+        if (apertureResult.status === 'rejected') {
+          console.error("Erro ao setar abertura:", apertureResult.reason);
+        }
+        if (sourceResult.status === 'rejected') {
+          console.error("Erro ao setar fonte:", sourceResult.reason);
+        }
+        alert('Erro ao criar a simulação, verifique os detalhes!');
+      }
     } catch (error) {
       console.error("Erro ao criar a simulação:", error);
+      alert('Erro ao criar a simulação!');
     }
   }
+  
+  
 
   setApertureRequest(simulationId: string): Promise<any> {
     if (this.form.get('apertureType')?.value === 'circular') {
