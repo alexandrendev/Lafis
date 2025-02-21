@@ -1,0 +1,16 @@
+<div class="modal" *ngIf="isOpen" (click)="close()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Detalhes da Simulação</h3>
+        <p><strong>ID:</strong> {{selectedSimulation?.id}}</p>
+        <p><strong>Tipo de Abertura:</strong> {{selectedSimulation?.apertureType}}</p>
+        <p><strong>Tipo de Fonte:</strong> {{selectedSimulation?.sourceType}}</p>
+        <p><strong>Quantidade de Emissões:</strong> {{selectedSimulation?.emissions}}</p>
+        <p><strong>Status:</strong> {{selectedSimulation?.status}}</p>
+        <p><strong>Emissões:</strong> {{selectedSimulation?.emissions}}</p>
+        <p><strong>Vazão:</strong> {{selectedSimulation?.escaped}}</p>
+
+        <div class="modal-footer">
+            <button (click)="close()">Fechar</button>
+        </div>
+    </div>
+</div>
