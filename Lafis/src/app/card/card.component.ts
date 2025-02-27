@@ -10,14 +10,7 @@ import { SimulacaoDetailModalComponent } from '../simulacao-detail-modal/simulac
   styleUrl: './card.component.scss'
 })
 export class CardComponent implements OnInit {
-  simulations: Array<{
-    id: string;
-    apertureType: string;
-    sourceType: string;
-    emissions: number;
-    status: string;
-    escaped: number;
-  }> = [];
+  simulations: Simulation[] = [];
   selectedSimulation: any = null;
   isModalOpen: boolean = false;
 
@@ -42,4 +35,26 @@ export class CardComponent implements OnInit {
         console.error('Erro ao buscar simulações:', error);
       });
   }
+}
+
+interface Simulation {
+  id: string;
+  context: {
+    aperture: {
+      type: string;
+      radius: number;
+      depth: number;
+    };
+    source: {
+      type: string;
+      radius: number;
+      height: number;
+      width: number;
+      depth: number;
+    };
+  };
+  emissions: number;
+  sourceHeight: number;
+  escaped: number;
+  status: string;
 }

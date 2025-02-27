@@ -1,34 +1,127 @@
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px; /* Aumente o tamanho máximo */
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  animation: slideUp 0.3s ease-in-out;
+}
+
+h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modal-body {
+  display: flex; /* Flexbox para layout lado a lado */
+  justify-content: space-between;
+  gap: 20px; /* Espaçamento entre a coluna de informações e o gráfico */
+}
+
+.info-grid {
+  display: grid;
+  gap: 12px;
+  flex: 1; /* Para ocupar o restante do espaço */
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: #ECECEC;
+  border-radius: 8px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  font-size: 1rem;
+  color: #222;
+}
+
+.chart-container {
+  flex: 1; /* Faz o gráfico ocupar o restante do espaço */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:active {
+  transform: scale(0.96);
+  box-shadow: inset 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 480px) {
   .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    max-width: 90%;
+      width: 90%;
+      padding: 20px;
   }
-  
-  .modal-footer {
-    text-align: center;
-    margin-top: 20px;
+
+  h3 {
+      font-size: 1.2rem;
   }
-  
+
+  .label {
+      font-size: 0.75rem;
+  }
+
+  .value {
+      font-size: 0.9rem;
+  }
+
   button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+      font-size: 0.9rem;
   }
-  
+
+  .modal-body {
+      flex-direction: column; /* Empilha no mobile */
+      gap: 15px;
+  }
+}

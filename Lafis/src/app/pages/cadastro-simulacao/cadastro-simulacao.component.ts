@@ -54,36 +54,67 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
   async onSubmit(): Promise<void> {
     console.log(this.form.value);
+    let aperture: any;
+    let sourceType;
+    let apertureType;
+    if (this.form.get('apertureType')?.value === 'circular') {
+      aperture = {
+        type: 'circular',
+        radius: this.form.value.apertureRadius,
+        height: this.form.value.apertureZAxisHeight
+      };
+      apertureType = 'CIRCULAR';
+    } else if (this.form.get('apertureType')?.value === 'rectangular') {
+      aperture = {
+        type: 'rectangular',
+        width: this.form.value.apertureWidth,
+        height: this.form.value.apertureHeight,
+        depth: this.form.value.apertureZAxisHeight
+      };
+      apertureType = 'RECTANGULAR';
+    }
+  
+    let source: any;
+    if (this.form.get('sourceType')?.value === 'prismatica') {
+      source = {
+        type: 'cuboid',
+        height: this.form.value.prismHeight,
+        width: this.form.value.prismWidth,
+        depth: this.form.value.prismDepth
+      };
+      sourceType = 'CUBOID';
+    } else if (this.form.get('sourceType')?.value === 'esferica') {
+      source = {
+        type: 'spherical',
+        radius: this.form.value.sphereRadius
+      };
+      sourceType = 'SPHERICAL'
+    } else if (this.form.get('sourceType')?.value === 'cilindrica') {
+      source = {
+        type: 'cylindrica',
+        height: this.form.value.cylinderHeight,
+        radius: this.form.value.cylinderRadius
+      };
+      sourceType = 'CYLINDRICAL';
+    }
+    const request = {
+      emissions: this.form.value.emissions,
+      sourceHeight: this.form.value.sourceZAxisHeight,
+      apertureType: apertureType,
+      aperture: aperture,
+      sourceType: sourceType,
+      source: source
+    };
+  
     try {
-      const response = await this.apiService.createNewSimulation(
-        this.form.value.emissions,
-        this.form.value.sourceZAxisHeight
-      );
-  
-      const apertureRequest = this.setApertureRequest(response.id);
-      const sourceRequest = this.setSourceRequest(response.id);
-  
-      const [apertureResult, sourceResult] = await Promise.allSettled([apertureRequest, sourceRequest]);
-  
-      if (apertureResult.status === 'fulfilled' && sourceResult.status === 'fulfilled') {
-        alert('Simulação criada com sucesso!');
-        console.log("Simulação criada com sucesso!");
-      } else {
-        if (apertureResult.status === 'rejected') {
-          console.error("Erro ao setar abertura:", apertureResult.reason);
-        }
-        if (sourceResult.status === 'rejected') {
-          console.error("Erro ao setar fonte:", sourceResult.reason);
-        }
-        alert('Erro ao criar a simulação, verifique os detalhes!');
-      }
+      const response = await this.apiService.createNewContext(request);
+      alert('Simulação criada com sucesso!');
+      console.log(response);
     } catch (error) {
-      console.error("Erro ao criar a simulação:", error);
+      console.error('Erro ao criar a simulação:', error);
       alert('Erro ao criar a simulação!');
     }
   }
-  
-  
 
   setApertureRequest(simulationId: string): Promise<any> {
     if (this.form.get('apertureType')?.value === 'circular') {
@@ -254,7 +285,6 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.updateScene();
   }
 
-  // Redimensiona o canvas quando a janela é redimensionada
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     const container = this.el.nativeElement.querySelector('.threejs-container');

@@ -1,13 +1,39 @@
 <div class="modal" *ngIf="isOpen" (click)="close()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <h3>Detalhes da Simulação</h3>
-        <p><strong>ID:</strong> {{selectedSimulation?.id}}</p>
-        <p><strong>Tipo de Abertura:</strong> {{selectedSimulation?.apertureType}}</p>
-        <p><strong>Tipo de Fonte:</strong> {{selectedSimulation?.sourceType}}</p>
-        <p><strong>Quantidade de Emissões:</strong> {{selectedSimulation?.emissions}}</p>
-        <p><strong>Status:</strong> {{selectedSimulation?.status}}</p>
-        <p><strong>Emissões:</strong> {{selectedSimulation?.emissions}}</p>
-        <p><strong>Vazão:</strong> {{selectedSimulation?.escaped}}</p>
+
+        <div class="modal-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">ID</span>
+                    <span class="value">{{selectedSimulation?.id}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Tipo de Abertura</span>
+                    <span class="value">{{selectedSimulation?.apertureType}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Tipo de Fonte</span>
+                    <span class="value">{{selectedSimulation?.sourceType}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Quantidade de Emissões</span>
+                    <span class="value">{{selectedSimulation?.emissions}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Status</span>
+                    <span class="value">{{selectedSimulation?.status}}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Vazão</span>
+                    <span class="value">{{selectedSimulation?.escaped}}</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas baseChart [data]="chartData" [options]="chartOptions" chartType="doughnut"></canvas>
+            </div>
+        </div>
 
         <div class="modal-footer">
             <button (click)="close()">Fechar</button>

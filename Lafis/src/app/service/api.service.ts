@@ -22,6 +22,27 @@ export class ApiService {
       });
   }
 
+  async createNewContext(body: any): Promise<any> {
+    try {
+      const response = await fetch(`${this.apiUrl}/new-context`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        return await response.json();
+      } else {
+        throw new Error('Erro ao criar a simulação');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      throw error;
+    }
+  }
+
   async createNewSimulation(emissions: number, sourceHeight: number): Promise<any> {
 
     return fetch(`${this.apiUrl}/new`, {
@@ -44,7 +65,6 @@ export class ApiService {
 
   async setRectangularAperture(simulationId: string, depth: number, width: number, height: number): Promise<any> {
 
-    console.log('ALSDKJALSKDJALKDJALSKDLAKJSDLAKSJDLAKJSDLKASJDLKJ')
     console.log(simulationId, depth, width, height);
 
     return fetch(`${this.apiUrl}/rectangular`, {
