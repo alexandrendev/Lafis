@@ -11,7 +11,7 @@ import { SimulacaoDetailModalComponent } from '../simulacao-detail-modal/simulac
 })
 export class CardComponent implements OnInit {
   simulations: Simulation[] = [];
-  selectedSimulation: any = null;
+  selectedSimulation!: Simulation;
   isModalOpen: boolean = false;
 
   constructor(private api: ApiService) {}

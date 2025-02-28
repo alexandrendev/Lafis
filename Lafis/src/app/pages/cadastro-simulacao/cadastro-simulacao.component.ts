@@ -68,8 +68,8 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       aperture = {
         type: 'rectangular',
         width: this.form.value.apertureWidth,
-        height: this.form.value.apertureHeight,
-        depth: this.form.value.apertureZAxisHeight
+        height: this.form.value.apertureZAxisHeight,
+        depth: this.form.value.apertureHeight
       };
       apertureType = 'RECTANGULAR';
     }
@@ -91,7 +91,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       sourceType = 'SPHERICAL'
     } else if (this.form.get('sourceType')?.value === 'cilindrica') {
       source = {
-        type: 'cylindrica',
+        type: 'cylindrical',
         height: this.form.value.cylinderHeight,
         radius: this.form.value.cylinderRadius
       };

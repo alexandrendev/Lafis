@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
+import { Chart } from 'chart.js/dist';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -26,6 +27,17 @@ export class SimulacaoDetailModalComponent {
       }
     ]
   };
+   public pieChartType: ChartType = 'pie';
+
+  public pieChartData: ChartData<'pie', number[], string | string[]> = {
+    labels: [['Vazão'], ['Emissões Captadas']],
+    datasets: [
+      {
+        data: [0, 0],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+      },
+    ],
+  };
 
   chartOptions: ChartOptions = {
     responsive: true,
@@ -47,9 +59,10 @@ export class SimulacaoDetailModalComponent {
 
   updateChart() {
     this.escaped = this.selectedSimulation.escaped;
-    this.emited = this.selectedSimulation.emissions;
+    this.emited = this.selectedSimulation.emissions - this.selectedSimulation.escaped;
 
-    this.chartData.datasets[0].data = [this.escaped, this.emited];
+    // this.chartData.datasets[0].data = [this.escaped, this.emited];
+    this.pieChartData.datasets[0].data = [this.escaped, this.emited];
   }
 
   ngOnChanges() {
