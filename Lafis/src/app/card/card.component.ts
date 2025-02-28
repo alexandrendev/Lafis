@@ -37,7 +37,7 @@ export class CardComponent implements OnInit {
   }
 }
 
-interface Simulation {
+export interface Simulation {
   id: string;
   context: {
     aperture: {
