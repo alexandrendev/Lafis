@@ -3,10 +3,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { Chart } from 'chart.js/dist';
 import { BaseChartDirective } from 'ng2-charts';
+import { InfoItemComponent } from '../info-item/info-item.component';
+
 
 @Component({
   selector: 'app-simulacao-detail-modal',
-  imports: [CommonModule, BaseChartDirective],
+  imports: [CommonModule, BaseChartDirective, InfoItemComponent],
   templateUrl: './simulacao-detail-modal.component.html',
   styleUrl: './simulacao-detail-modal.component.scss'
 })

@@ -4,37 +4,41 @@
 
         <div class="modal-body">
             <div class="info-grid">
-                <div class="info-item">
-                    <span class="label">ID</span>
-                    <span class="value">{{selectedSimulation?.id}}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Tipo de Abertura</span>
-                    <span class="value">{{selectedSimulation?.context.aperture.type}}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Tipo de Fonte</span>
-                    <span class="value">{{selectedSimulation?.context.source.type}}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Quantidade de Emissões</span>
-                    <span class="value">{{selectedSimulation?.emissions}}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Status</span>
-                    <span class="value">{{selectedSimulation?.status}}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">Vazão</span>
-                    <span class="value">{{selectedSimulation?.escaped}}</span>
-                </div>
+                <app-info-item
+                    [label] ="'ID:'"
+                    [value] ="selectedSimulation?.id"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Tipo de Abertura:'"
+                    [value] ="selectedSimulation?.context.aperture.type"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Tipo de Fonte:'"
+                    [value] ="selectedSimulation?.context.source.type"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Quantidade de emissões:'"
+                    [value] ="selectedSimulation?.emissions"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Status:'"
+                    [value] ="selectedSimulation?.status"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Vazão'"
+                    [value] ="selectedSimulation?.escaped"
+                ></app-info-item>
             </div>
 
             <div class="chart-container">
                 <canvas baseChart [data]="pieChartData" [options]="chartOptions" [type]="pieChartType"></canvas>
             </div>
         </div>
-
         <div class="modal-footer">
             <button (click)="close()">Fechar</button>
         </div>

@@ -1,0 +1,26 @@
+.info-item {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value-container {
+  background: #ECECEC;
+  border-radius: 8px;
+  padding: 10px;
+  display: inline-block;
+  width: auto;
+}
+
+.value {
+  font-size: 1rem;
+  color: #222;
+}

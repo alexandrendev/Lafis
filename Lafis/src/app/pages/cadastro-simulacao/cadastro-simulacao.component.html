@@ -39,7 +39,7 @@
       <option value="cilindrica">Cilíndrica</option>
     </select>
 
-    <!-- Campos específicos para cada tipo de fonte -->
+
     <div *ngIf="form.get('sourceType')?.value === 'prismatica'" style="display: flex; flex-direction: column;">
         <label for="prismHeight">Altura do prisma (cm):</label>
         <input type="number" id="prismHeight" formControlName="prismHeight" name="prismHeight" (change)="updateScene()">

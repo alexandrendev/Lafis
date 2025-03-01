@@ -5,22 +5,26 @@
         <h2>{{simulation.id}}</h2>
     
         <div class="info">
-            <div>
-                <label for="aperture">Tipo de Abertura: </label>
-                <span id="aperture">{{simulation.context.aperture.type}}</span>
-            </div>
-            <div>
-                <label for="source">Tipo de Fonte: </label>
-                <span id="source">{{simulation.context.source.type}}</span>    
-            </div>
-            <div>
-                <label for="emissions">Quantidade de Emissões: </label>
-                <span id="source">{{simulation.emissions}}</span>    
-            </div>
-            <div>
-                <label for="emissions">Status: </label>
-                <span id="source">{{simulation.status}}</span>                
-            </div>
+
+            <app-info-item
+                    [label] ="'Tipo de Abertura:'"
+                    [value] ="simulation.context.aperture.type"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Tipo de Fonte:'"
+                    [value] ="simulation.context.source.type"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Quantidade de emissões:'"
+                    [value] ="simulation?.emissions"
+                ></app-info-item>
+
+                <app-info-item
+                    [label] ="'Status:'"
+                    [value] ="simulation.status"
+                ></app-info-item>
         </div>
     
         <div class="card-footer">

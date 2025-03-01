@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../service/api.service';
 import { CommonModule } from '@angular/common';
 import { SimulacaoDetailModalComponent } from '../simulacao-detail-modal/simulacao-detail-modal.component';
+import { InfoItemComponent } from '../info-item/info-item.component';
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule, SimulacaoDetailModalComponent],
+  imports: [CommonModule, SimulacaoDetailModalComponent, InfoItemComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })

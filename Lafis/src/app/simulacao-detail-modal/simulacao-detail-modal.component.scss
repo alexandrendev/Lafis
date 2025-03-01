@@ -18,7 +18,7 @@
   padding: 25px;
   border-radius: 12px;
   width: 100%;
-  max-width: 800px; /* Aumente o tamanho máximo */
+  max-width: 800px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
   text-align: left;
   animation: slideUp 0.3s ease-in-out;
@@ -33,40 +33,19 @@ h3 {
 }
 
 .modal-body {
-  display: flex; /* Flexbox para layout lado a lado */
+  display: flex;
   justify-content: space-between;
-  gap: 20px; /* Espaçamento entre a coluna de informações e o gráfico */
+  gap: 20px;
 }
 
 .info-grid {
   display: grid;
   gap: 12px;
-  flex: 1; /* Para ocupar o restante do espaço */
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  background: #ECECEC;
-  border-radius: 8px;
-}
-
-.label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: #555;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.value {
-  font-size: 1rem;
-  color: #222;
+  flex: 1;
 }
 
 .chart-container {
-  flex: 1; /* Faz o gráfico ocupar o restante do espaço */
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,7 +100,7 @@ button:active {
   }
 
   .modal-body {
-      flex-direction: column; /* Empilha no mobile */
+      flex-direction: column;
       gap: 15px;
   }
 }
