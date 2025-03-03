@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +8,7 @@ export class ApiService {
   private apiUrl: string = 'http://localhost:8080/simulation';
 
   constructor(private http: HttpClient) { }
+
 
   async findRunning() {
     return fetch(`${this.apiUrl}/running`)
@@ -22,7 +22,28 @@ export class ApiService {
       });
   }
 
+  async startSimulation(simulationId: string){
+    try{
+      const response = await fetch(`${this.apiUrl}/start?simulationId=${simulationId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        return await response.json();
+      } else {
+        throw new Error('Erro ao iniciar a simulação');
+      }
+    }catch (error) {
+      console.error('Erro na requisição:', error);
+      throw error;
+    }
+  }
+
   async createNewContext(body: any): Promise<any> {
+    console.log('aqui');
+    console.log(body);
     try {
       const response = await fetch(`${this.apiUrl}/new-context`, {
         method: 'POST',

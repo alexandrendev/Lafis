@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ThreeServiceService } from '../../service/three-service.service';
-import { ApiService } from '../../service/api.service';
+import { ApiService } from '../../service/api/api.service';
 import { NotificationService } from '../../service/notification.service';
 
 @Component({
@@ -53,7 +53,6 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   }
 
   async onSubmit(): Promise<void> {
-    console.log(this.form.value);
     let aperture: any;
     let sourceType;
     let apertureType;
@@ -105,7 +104,9 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       sourceType: sourceType,
       source: source
     };
-  
+ 
+    console.log('apertureZAxisHeight:', this.form.get('apertureZAxisHeight')?.value);
+
     try {
       const response = await this.apiService.createNewContext(request);
       alert('Simulação criada com sucesso!');

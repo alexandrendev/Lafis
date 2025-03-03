@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { Chart } from 'chart.js/dist';
 import { BaseChartDirective } from 'ng2-charts';
-import { InfoItemComponent } from '../info-item/info-item.component';
+import { InfoItemComponent } from '../../components/info-item/info-item.component';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class SimulacaoDetailModalComponent {
       }
     ]
   };
-   public pieChartType: ChartType = 'pie';
+   public pieChartType: ChartType = 'doughnut';
 
   public pieChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [['Vazão'], ['Emissões Captadas']],
@@ -63,8 +63,8 @@ export class SimulacaoDetailModalComponent {
     this.escaped = this.selectedSimulation.escaped;
     this.emited = this.selectedSimulation.emissions - this.selectedSimulation.escaped;
 
-    // this.chartData.datasets[0].data = [this.escaped, this.emited];
-    this.pieChartData.datasets[0].data = [this.escaped, this.emited];
+    this.chartData.datasets[0].data = [this.escaped, this.emited];
+    // this.pieChartData.datasets[0].data = [this.escaped, this.emited];
   }
 
   ngOnChanges() {

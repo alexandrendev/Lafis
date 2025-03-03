@@ -35,9 +35,14 @@
                 ></app-info-item>
             </div>
 
-            <div class="chart-container">
-                <canvas baseChart [data]="pieChartData" [options]="chartOptions" [type]="pieChartType"></canvas>
+            <div class="chart-container" *ngIf="selectedSimulation?.status == 'FINISHED'">
+                <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="pieChartType"></canvas>
             </div>
+
+            <div class="chart-container" *ngIf="selectedSimulation?.status != 'FINISHED'">
+                <P>Esta simulação ainda não contém resultados.</P>
+            </div>
+
         </div>
         <div class="modal-footer">
             <button (click)="close()">Fechar</button>

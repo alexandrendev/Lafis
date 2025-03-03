@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../service/api.service';
+import { ApiService } from '../../service/api/api.service';
 import { CommonModule } from '@angular/common';
-import { SimulacaoDetailModalComponent } from '../simulacao-detail-modal/simulacao-detail-modal.component';
-import { InfoItemComponent } from '../info-item/info-item.component';
+import { SimulacaoDetailModalComponent } from '../../pages/simulacao-detail-modal/simulacao-detail-modal.component';
+import { InfoItemComponent } from '../../components/info-item/info-item.component';
 
 @Component({
   selector: 'app-card',
@@ -24,6 +24,10 @@ export class CardComponent implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
+  }
+
+  startSimulation(simulationId: string){
+    this.api.startSimulation(simulationId);
   }
 
   ngOnInit(): void {

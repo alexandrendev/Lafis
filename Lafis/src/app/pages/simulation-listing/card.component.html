@@ -28,18 +28,19 @@
         </div>
     
         <div class="card-footer">
-            <div class="button delete">
-                <a href=#>  
-                    <img src="/assets/delete.svg">
-                    <p>Excluir</p>
-                </a>
-            </div>
-    
-            <div class="button information">
+            <div class="button information" >
                 <a href=# (click)="openModal(simulation)">
                     <img src="/assets/info-white.svg">
                     <p>Detalhes</p>
                 </a>
+            </div>
+            <div *ngIf="simulation.status === 'CREATED'">
+                <div class="button confirm">
+                    <a href=# (click)="startSimulation(simulation.id)">  
+                        <img src="/assets/play-icon.svg">
+                        <p>Iniciar Simulação</p>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -49,7 +50,10 @@
     <div>Nenhuma Simulação Encontrada :( </div>
 </ng-template>
 
-<app-simulacao-detail-modal
+<div>
+
+</div>
+<app-simulacao-detail-modal 
   [selectedSimulation]="selectedSimulation"
   [isOpen]="isModalOpen"
   (closeModal)="closeModal()">
