@@ -39,7 +39,7 @@ export class ThreeServiceService {
     );
     let material;
     if(aperture === false){
-        material = new THREE.MeshBasicMaterial({ color: 'blue', wireframe: true});    
+        material = new THREE.MeshBasicMaterial({ color: 'blue', wireframe: false});    
     }
     else{material = new THREE.MeshNormalMaterial({wireframe: false, transparent: true, opacity: 0.5});}
 
