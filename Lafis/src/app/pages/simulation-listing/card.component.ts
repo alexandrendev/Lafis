@@ -62,4 +62,5 @@ export interface Simulation {
   sourceHeight: number;
   escaped: number;
   status: string;
+  created: any;
 }

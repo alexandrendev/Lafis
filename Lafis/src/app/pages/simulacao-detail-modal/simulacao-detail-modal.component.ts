@@ -17,6 +17,9 @@ export class SimulacaoDetailModalComponent {
   @Input() isOpen: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
+  solidAngle!: number;
+  escapedPercentual!: number;
+
   escaped!: number;
   emited!: number;
 
@@ -25,18 +28,18 @@ export class SimulacaoDetailModalComponent {
     datasets: [
       {
         data: [0, 0],
-        backgroundColor: ['#36A2EB', '#FF6384'],
+        backgroundColor: ['#A8A8A8', '#36A2EB'],
       }
     ]
   };
-   public pieChartType: ChartType = 'doughnut';
+   public pieChartType: ChartType = 'pie';
 
   public pieChartData: ChartData<'pie', number[], string | string[]> = {
     labels: [['Vazão'], ['Emissões Captadas']],
     datasets: [
       {
         data: [0, 0],
-        backgroundColor: ['#36A2EB', '#FF6384'],
+        backgroundColor: ['#36A2EB', '#A8A8A8'],
       },
     ],
   };
@@ -59,17 +62,19 @@ export class SimulacaoDetailModalComponent {
   }
 
 
-  updateChart() {
+  updateInformation() {
     this.escaped = this.selectedSimulation.escaped;
     this.emited = this.selectedSimulation.emissions - this.selectedSimulation.escaped;
 
     this.chartData.datasets[0].data = [this.escaped, this.emited];
     // this.pieChartData.datasets[0].data = [this.escaped, this.emited];
+    this.solidAngle = (4* Math.PI * this.selectedSimulation.escaped) / this.selectedSimulation.emissions;
+    this.escapedPercentual = (this.selectedSimulation.escaped / this.selectedSimulation.emissions) * 100;
   }
 
   ngOnChanges() {
     if (this.isOpen) {
-      this.updateChart();
+      this.updateInformation();
     }
   }
 }

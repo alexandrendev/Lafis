@@ -24,17 +24,30 @@
                     [value] ="selectedSimulation?.emissions"
                 ></app-info-item>
 
+            </div>
+
+            <div class="info-grid">
                 <app-info-item
-                    [label] ="'Status:'"
-                    [value] ="selectedSimulation?.status"
+                    [label] ="'Ângulo Sólido:'"
+                    [value] ="solidAngle | number: '1.2-4'"
+                ></app-info-item>
+
+                <app-info-item
+                [label] ="'Status:'"
+                [value] ="selectedSimulation?.status"
                 ></app-info-item>
 
                 <app-info-item
                     [label] ="'Vazão'"
                     [value] ="selectedSimulation?.escaped"
                 ></app-info-item>
-            </div>
 
+                <app-info-item
+                    [label] ="'Vazão (%):'"
+                    [value] ="escapedPercentual"
+                ></app-info-item>
+                
+            </div>
             <div class="chart-container" *ngIf="selectedSimulation?.status == 'FINISHED'">
                 <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="pieChartType"></canvas>
             </div>
