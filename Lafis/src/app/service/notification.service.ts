@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationDialogComponent } from '../components/notification-dialog/notification-dialog.component';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private dialog: MatDialog) { }
 
-  show(message: string, action: string = 'Fechar', duration: number = 3000) {
-    this.snackBar.open(message, action, { duration });
+  showAlert(message: string, callback?: () => void): void {
+    const dialogRef = this.dialog.open(NotificationDialogComponent, {
+      width: '300px',
+      data: { message }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'ok' && callback) {
+        callback();
+      }
+    });
   }
 }
