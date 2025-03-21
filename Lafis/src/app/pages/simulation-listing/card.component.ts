@@ -3,6 +3,8 @@ import { ApiService } from '../../service/api/api.service';
 import { CommonModule } from '@angular/common';
 import { SimulacaoDetailModalComponent } from '../../pages/simulacao-detail-modal/simulacao-detail-modal.component';
 import { InfoItemComponent } from '../../components/info-item/info-item.component';
+import { NotificationService } from '../../service/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card',
@@ -15,7 +17,7 @@ export class CardComponent implements OnInit {
   selectedSimulation!: Simulation;
   isModalOpen: boolean = false;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private notificationService: NotificationService, private router: Router) {}
 
   openModal(simulation: any) {
     this.selectedSimulation = simulation;
@@ -28,6 +30,13 @@ export class CardComponent implements OnInit {
 
   startSimulation(simulationId: string){
     this.api.startSimulation(simulationId);
+    this.notificationService.showAlert("Simulação Iniciada com Sucesso!");
+  }
+
+  showNotification(){
+    this.notificationService.showAlert("Você ainda não possui nenhuma simulação. Deseja criar uma?", () => {
+      this.router.navigate(['/new']);
+    });
   }
 
   ngOnInit(): void {
@@ -35,6 +44,9 @@ export class CardComponent implements OnInit {
       .getAllSimulations()
       .then((simulations) => {
         this.simulations = simulations;
+        if (this.simulations.length < 1) {
+          this.showNotification();
+        }
       })
       .catch((error) => {
         console.error('Erro ao buscar simulações:', error);

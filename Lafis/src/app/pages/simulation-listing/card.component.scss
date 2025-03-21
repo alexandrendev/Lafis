@@ -1,3 +1,44 @@
+.options-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: gainsboro;
+    padding: 15px;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.title-container {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+    width: 100%;
+}
+
+.options-bar a {
+    text-decoration: none;
+    color: white;
+    background-color: #26538C;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.options-bar a:hover {
+    background-color: #1e416d;
+    transform: scale(1.05);
+}
+
+
+
 .card-container {
     display: flex;
     flex-direction: column;

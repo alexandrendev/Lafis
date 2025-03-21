@@ -1,4 +1,15 @@
-<div *ngIf="simulations.length > 0; else notFound">
+<div class="options-bar">
+    <div class="title-container">
+        <h2>Listagem de Simulações</h2>
+    </div>
+    <div class="button-container">
+        <a href="#">Mais antigas primeiro</a>
+        <a href="#">Mais recentes primeiro</a>
+    </div>
+    
+</div>
+
+<div *ngIf="simulations.length > 0;">
     <div *ngFor="let simulation of simulations" class="card-container">
         <div class="card-header">
         </div>
@@ -31,7 +42,7 @@
             <div class="button information" >
                 <a href=# (click)="openModal(simulation)">
                     <img src="/assets/info-white.svg">
-                    <p>Detalhes</p>
+                    <p>Visualizar Relatório</p>
                 </a>
             </div>
             <div *ngIf="simulation.status === 'CREATED'">
@@ -45,10 +56,6 @@
         </div>
     </div>
 </div>
-
-<ng-template #notFound>
-    <div>Nenhuma Simulação Encontrada :( </div>
-</ng-template>
 
 <div>
 

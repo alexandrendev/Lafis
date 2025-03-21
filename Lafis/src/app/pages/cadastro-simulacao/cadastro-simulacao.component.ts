@@ -1,11 +1,12 @@
-import { Component, OnInit, AfterViewInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { FormGroup, FormsModule, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { ThreeServiceService } from '../../service/three-service.service';
 import { ApiService } from '../../service/api/api.service';
 import { NotificationService } from '../../service/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro-simulacao',
@@ -21,7 +22,14 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   private renderer!: THREE.WebGLRenderer;
   private controls!: OrbitControls;
 
-  constructor(private el: ElementRef, private service: ThreeServiceService, private apiService: ApiService) { }
+  constructor(
+    private el: ElementRef, 
+    private service: ThreeServiceService, 
+    private apiService: ApiService, 
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private notificationService: NotificationService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.scene = new THREE.Scene();
@@ -109,8 +117,9 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
     try {
       const response = await this.apiService.createNewContext(request);
-      alert('Simulação criada com sucesso!');
-      console.log(response);
+      this.notificationService.showAlert('Simulação criada com sucesso!', () => {
+        this.router.navigate(['/']);
+      })
     } catch (error) {
       console.error('Erro ao criar a simulação:', error);
       alert('Erro ao criar a simulação!');
@@ -203,6 +212,12 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.form.get('cylinderRadius')?.updateValueAndValidity();
   }
   ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.initThree();
+    }
+  }
+
+  initThree(): void{
     const container = this.el.nativeElement.querySelector('.threejs-container');
 
     this.renderer = new THREE.WebGLRenderer();
