@@ -10,6 +10,25 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
 
+  async findById(id: string) {
+    const url = `${this.apiUrl}/id?simulationId=${id}`;
+  
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        return data;
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        throw error;
+      });
+  }
+
   async findRunning() {
     return fetch(`${this.apiUrl}/running`)
       .then(response => {

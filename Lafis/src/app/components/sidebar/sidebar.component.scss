@@ -12,12 +12,13 @@
 
     .logo-container {
       margin: 0px 20px;
-      width: 100px;
-      height: 100px;
+      width: 10%;
+      height: 10%;
       display: flex;
       justify-content: start;
       align-items: center;
       color: white;
+      
 
       img {
         height: 50px;
@@ -68,5 +69,11 @@
           width: 100%;
         }
       }
+    }
+  }
+
+  @media print {
+    .sidebar {
+      display: none;
     }
   }

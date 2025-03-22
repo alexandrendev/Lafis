@@ -1,0 +1,69 @@
+<div *ngIf="simulation">
+    <div class="center">
+        <div class="report">
+            <div class="header">
+                <h1>Relatório da Simulação</h1>
+                <p>Gerado Automaticamente</p>
+            </div>
+            
+            <div class="content">
+                <div class="col">
+                    <!-- <div class="section">
+                        <h3>Detalhes da Simulação</h3>
+                    </div> -->
+                    <app-info-item [label]="'ID'" [value]="simulation.id"></app-info-item>
+                    <app-info-item [label]="'Emissões'" [value]="simulation.emissions"></app-info-item>
+                    <app-info-item [label]="'Vazão'" [value]="simulation.escaped"></app-info-item>
+                    <app-info-item [label]="'Status'" [value]="simulation.status"></app-info-item>
+                    <app-info-item [label]="'Criada em'" [value]="simulation.created"></app-info-item>
+                    <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="col">
+                    <div class="section">
+                        <h3>Informações da Abertura</h3>
+                    </div>
+                    <app-info-item [label]="'Tipo de Abertura'" [value]="simulation.context.aperture.type"></app-info-item>
+                    <app-info-item [label]="'Altura da base até a abertura'" [value]="simulation.context.aperture.height + 'cm'"></app-info-item>
+                    
+                    <div *ngIf="simulation.context.aperture.type === 'rectangular'">
+                        <app-info-item [label]="'Largura Abertura'" [value]="simulation.context.aperture.width + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Profundidade da Abertura'" [value]="''"></app-info-item>
+                    </div>
+    
+                    <div *ngIf="simulation.context.aperture.type !== 'rectangular'">
+                        <app-info-item [label]="'Raio da Abertura'" [value]="simulation.context.aperture.radius + 'cm'"></app-info-item>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="section">
+                        <h3>Informações da Fonte</h3>
+                    </div>
+                    <app-info-item [label]="'Tipo de Fonte'" [value]="simulation.context.source.type"></app-info-item>
+                    <div *ngIf="simulation.context.source.type === 'cuboid'">
+                        <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Largura da Fonte'" [value]="simulation.context.source.width + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Profundidade da Fonte'" [value]="simulation.context.source.depth + 'cm'"></app-info-item>
+                    </div>
+    
+                    <div *ngIf="simulation.context.source.type === 'cylindrical'">
+                        <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
+                    </div>
+    
+                    <div *ngIf="simulation.context.source.type === 'spherical'">
+                        <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="chart-container">
+                        Espaço para o gráfico
+                    </div> -->
+
+            <div class="footer"></div>
+        </div>
+    </div>
+</div>

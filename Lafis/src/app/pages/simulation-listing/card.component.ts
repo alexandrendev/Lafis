@@ -5,27 +5,22 @@ import { SimulacaoDetailModalComponent } from '../../pages/simulacao-detail-moda
 import { InfoItemComponent } from '../../components/info-item/info-item.component';
 import { NotificationService } from '../../service/notification.service';
 import { Router } from '@angular/router';
+import { Simulation } from '../../entity/Simulation';
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule, SimulacaoDetailModalComponent, InfoItemComponent],
+  imports: [CommonModule, InfoItemComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
 export class CardComponent implements OnInit {
   simulations: Simulation[] = [];
   selectedSimulation!: Simulation;
-  isModalOpen: boolean = false;
 
   constructor(private api: ApiService, private notificationService: NotificationService, private router: Router) {}
 
-  openModal(simulation: any) {
-    this.selectedSimulation = simulation;
-    this.isModalOpen = true;
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
+  openReport(id: String){
+    this.router.navigate(['/teste', id]);
   }
 
   startSimulation(simulationId: string){
@@ -54,25 +49,3 @@ export class CardComponent implements OnInit {
   }
 }
 
-export interface Simulation {
-  id: string;
-  context: {
-    aperture: {
-      type: string;
-      radius: number;
-      depth: number;
-    };
-    source: {
-      type: string;
-      radius: number;
-      height: number;
-      width: number;
-      depth: number;
-    };
-  };
-  emissions: number;
-  sourceHeight: number;
-  escaped: number;
-  status: string;
-  created: any;
-}

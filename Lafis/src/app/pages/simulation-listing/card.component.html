@@ -6,7 +6,6 @@
         <a href="#">Mais antigas primeiro</a>
         <a href="#">Mais recentes primeiro</a>
     </div>
-    
 </div>
 
 <div *ngIf="simulations.length > 0;">
@@ -40,7 +39,7 @@
     
         <div class="card-footer">
             <div class="button information" >
-                <a href=# (click)="openModal(simulation)">
+                <a (click)="openReport(simulation.id)">
                     <img src="/assets/info-white.svg">
                     <p>Visualizar Relatório</p>
                 </a>
@@ -60,8 +59,8 @@
 <div>
 
 </div>
-<app-simulacao-detail-modal 
+<!-- <app-simulacao-detail-modal 
   [selectedSimulation]="selectedSimulation"
   [isOpen]="isModalOpen"
   (closeModal)="closeModal()">
-</app-simulacao-detail-modal>
+</app-simulacao-detail-modal> -->
