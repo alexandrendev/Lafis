@@ -4,6 +4,7 @@
             <div class="header">
                 <h1>Relatório da Simulação</h1>
                 <p>Gerado Automaticamente</p>
+                <button (click)="printReport()">Imprimir Relatório</button>
             </div>
             
             <div class="content">
@@ -18,6 +19,17 @@
                     <app-info-item [label]="'Criada em'" [value]="simulation.created"></app-info-item>
                     <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
                 </div>
+
+                <div class="col">
+                    <div class="section">
+                        <h3>Relação Emissões x Vazão</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'pie'"></canvas>
+                    </div>
+
+                    <app-info-item [label]="'Ângulo sólido calculado'" [value]="solidAngle"></app-info-item>
+                </div>
             </div>
 
             <div class="content">
@@ -30,7 +42,7 @@
                     
                     <div *ngIf="simulation.context.aperture.type === 'rectangular'">
                         <app-info-item [label]="'Largura Abertura'" [value]="simulation.context.aperture.width + 'cm'"></app-info-item>
-                        <app-info-item [label]="'Profundidade da Abertura'" [value]="''"></app-info-item>
+                        <app-info-item [label]="'Profundidade da Abertura'" [value]="simulation.context.aperture.depth + 'cm'"></app-info-item>
                     </div>
     
                     <div *ngIf="simulation.context.aperture.type !== 'rectangular'">
@@ -58,10 +70,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="chart-container">
-                        Espaço para o gráfico
-                    </div> -->
 
             <div class="footer"></div>
         </div>
