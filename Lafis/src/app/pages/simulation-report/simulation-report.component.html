@@ -13,10 +13,10 @@
                         <h3>Detalhes da Simulação</h3>
                     </div> -->
                     <app-info-item [label]="'ID'" [value]="simulation.id"></app-info-item>
-                    <app-info-item [label]="'Emissões'" [value]="simulation.emissions"></app-info-item>
-                    <app-info-item [label]="'Vazão'" [value]="simulation.escaped"></app-info-item>
+                    <app-info-item [label]="'Emissões'" [value]="simulation.emissions | number"></app-info-item>
+                    <app-info-item [label]="'Vazão'" [value]="simulation.escaped | number"></app-info-item>
                     <app-info-item [label]="'Status'" [value]="simulation.status"></app-info-item>
-                    <app-info-item [label]="'Criada em'" [value]="simulation.created"></app-info-item>
+                    <app-info-item [label]="'Criada em'" [value]="simulation.created | date:'dd MMM yyyy - HH:mm'"></app-info-item>
                     <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
                 </div>
 
@@ -28,7 +28,7 @@
                         <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'pie'"></canvas>
                     </div>
 
-                    <app-info-item [label]="'Ângulo sólido calculado'" [value]="solidAngle"></app-info-item>
+                    <app-info-item [label]="'Ângulo sólido calculado'" [value]="solidAngle | number"></app-info-item>
                 </div>
             </div>
 
@@ -69,6 +69,10 @@
                         <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
                     </div>
                 </div>
+            </div>
+
+            <div class="content-view">
+
             </div>
 
             <div class="footer"></div>

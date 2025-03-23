@@ -5,7 +5,17 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
   providedIn: 'root'
 })
 export class ChartProviderService {
-  constructor() { }
+  chartOptions: ChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+  };
 
   chartData: ChartData<'doughnut'> = {
     labels: ['Vazão', 'Emissões'],
@@ -25,18 +35,6 @@ export class ChartProviderService {
         backgroundColor: ['#36A2EB', '#A8A8A8'],
       },
     ],
-  };
-
-  chartOptions: ChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
   };
 
   updateChartData(escaped: number, emissions: number): void {

@@ -12,7 +12,7 @@
     <div *ngFor="let simulation of simulations" class="card-container">
         <div class="card-header">
         </div>
-        <h2>{{simulation.created}}</h2>
+        <h2>{{simulation.created | date: 'medium'}}</h2>
     
         <div class="info">
 
@@ -28,7 +28,7 @@
 
                 <app-info-item
                     [label] ="'Quantidade de emissões:'"
-                    [value] ="simulation?.emissions"
+                    [value] ="simulation?.emissions | number"
                 ></app-info-item>
 
                 <app-info-item
