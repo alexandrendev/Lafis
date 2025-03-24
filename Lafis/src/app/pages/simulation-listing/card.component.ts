@@ -16,6 +16,7 @@ import { Simulation } from '../../entity/Simulation';
 export class CardComponent implements OnInit {
   simulations: Simulation[] = [];
   selectedSimulation!: Simulation;
+  isLoading: { [key: string]: boolean } = {};
 
   constructor(private api: ApiService, private notificationService: NotificationService, private router: Router) {}
 
@@ -23,9 +24,26 @@ export class CardComponent implements OnInit {
     this.router.navigate(['/teste', id]);
   }
 
-  startSimulation(simulationId: string){
-    this.api.startSimulation(simulationId);
-    this.notificationService.showAlert("Simulação Iniciada com Sucesso!");
+  async startSimulation(simulationId: string): Promise<void>{
+
+    if (this.isLoading[simulationId]) {
+      this.notificationService.showAlert("A simulação já está em andamento.");
+      return;
+    }
+
+    this.isLoading[simulationId] = true;
+
+    try {
+      const result = await this.api.startSimulation(simulationId);
+      if(result){
+        this.notificationService.showAlert("Simulação iniciada com sucesso!");
+        this.ngOnInit();
+      }
+    } catch (error) {
+      this.notificationService.showAlert("Falha ao iniciar a simulação.");
+    } finally {
+      this.isLoading[simulationId] = false;
+    }
   }
 
   showNotification(){

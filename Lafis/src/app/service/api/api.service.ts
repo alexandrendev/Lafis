@@ -41,7 +41,7 @@ export class ApiService {
       });
   }
 
-  async startSimulation(simulationId: string){
+  async startSimulation(simulationId: string): Promise<boolean> {
     try{
       const response = await fetch(`${this.apiUrl}/start?simulationId=${simulationId}`, {
         method: 'POST',
@@ -50,7 +50,7 @@ export class ApiService {
         },
       });
       if (response.ok) {
-        return await response.json();
+        return true;
       } else {
         throw new Error('Erro ao iniciar a simulação');
       }

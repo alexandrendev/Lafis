@@ -60,7 +60,7 @@
       <input type="number" id="cylinderRadius" formControlName="cylinderRadius" name="cylinderRadius" (change)="updateScene()">
     </div>
 
-    <button type="submit">Enviar</button>
+    <button [disabled]="form.invalid" type="submit">Enviar</button>
   </form>
 
   <!-- Exibição da Forma e Fonte ao lado -->

@@ -2,10 +2,10 @@
     <div class="title-container">
         <h2>Listagem de Simulações</h2>
     </div>
-    <div class="button-container">
+    <!-- <div class="button-container">
         <a href="#">Mais antigas primeiro</a>
         <a href="#">Mais recentes primeiro</a>
-    </div>
+    </div> -->
 </div>
 
 <div *ngIf="simulations.length > 0;">
@@ -45,12 +45,21 @@
                 </a>
             </div>
             <div *ngIf="simulation.status === 'CREATED'">
-                <div class="button confirm">
-                    <a href=# (click)="startSimulation(simulation.id)">  
-                        <img src="/assets/play-icon.svg">
-                        <p>Iniciar Simulação</p>
+                <!-- <div class="button confirm">
+                    <a (click)="startSimulation(simulation.id)" [class.loading]="isLoading[simulation.id]" [disabled]="isLoading[simulation.id]">
+                        <img *ngIf="!isLoading[simulation.id]" src="/assets/play-icon.svg">
+                        <p>{{ isLoading[simulation.id] ? 'Iniciando...' : 'Iniciar Simulação' }}</p>
                     </a>
-                </div>
+                </div> -->
+
+                <div class="button confirm">
+                    <a (click)="!isLoading[simulation.id] && startSimulation(simulation.id)"
+                       [class.loading]="isLoading[simulation.id]"
+                       [class.disabled]="isLoading[simulation.id]">
+                      <img *ngIf="!isLoading[simulation.id]" src="/assets/play-icon.svg">
+                      <p>{{ isLoading[simulation.id] ? 'Iniciando...' : 'Iniciar Simulação' }}</p>
+                    </a>
+                  </div>
             </div>
         </div>
     </div>
