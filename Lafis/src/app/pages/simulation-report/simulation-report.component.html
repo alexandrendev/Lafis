@@ -54,6 +54,7 @@
                         <h3>Informações da Fonte</h3>
                     </div>
                     <app-info-item [label]="'Tipo de Fonte'" [value]="simulation.context.source.type"></app-info-item>
+                    <app-info-item [label]="'Altura da fonte no eixo z'" [value]="simulation.sourceHeight + 'cm'"></app-info-item>
                     <div *ngIf="simulation.context.source.type === 'cuboid'">
                         <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
                         <app-info-item [label]="'Largura da Fonte'" [value]="simulation.context.source.width + 'cm'"></app-info-item>
