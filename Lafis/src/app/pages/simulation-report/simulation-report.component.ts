@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Simulation } from '../../entity/Simulation';
 import { InfoItemComponent } from '../../components/info-item/info-item.component';
 import { ActivatedRoute } from '@angular/router';
@@ -22,8 +22,9 @@ export class SimulationReportComponent implements OnInit{
   public pieChartType: ChartType = 'pie';
   solidAngle!: number;
 
+  private readonly api = inject(ApiService);
 
-  constructor(private route: ActivatedRoute, private api: ApiService, private chart: ChartProviderService){
+  constructor(private route: ActivatedRoute, private chart: ChartProviderService){
 
     this.chartOptions = this.chart.chartOptions;
     this.chartData = this.chart.chartData;
@@ -34,18 +35,18 @@ export class SimulationReportComponent implements OnInit{
   ngOnInit(): void{    
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.api.findById(id)
-        .then(simulation => {
+      this.api.findById(id).subscribe({
+        next: (simulation: Simulation) => {
           this.simulation = simulation;
           this.updateCharts();
-        })
-        .catch(error => {
+        },
+        error: (error: any) => {
           console.error('Erro ao carregar simulação:', error);
-        });
+        }
+      });
     } else {
       console.error('ID da simulação não encontrado na URL.');
     }
-
   }
 
   private updateCharts(): void {

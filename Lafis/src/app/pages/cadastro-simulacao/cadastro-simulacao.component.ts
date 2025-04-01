@@ -115,56 +115,17 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
  
     console.log('apertureZAxisHeight:', this.form.get('apertureZAxisHeight')?.value);
 
-    try {
-      const response = await this.apiService.createNewContext(request);
-      this.notificationService.showAlert('Simulação criada com sucesso!', () => {
-        this.router.navigate(['/']);
-      })
-    } catch (error) {
-      console.error('Erro ao criar a simulação:', error);
-      alert('Erro ao criar a simulação!');
-    }
-  }
-
-  setApertureRequest(simulationId: string): Promise<any> {
-    if (this.form.get('apertureType')?.value === 'circular') {
-      return this.apiService.setCircularAperture(
-        simulationId,
-        this.form.value.apertureRadius,
-        this.form.value.apertureZAxisHeight
-      );
-    } else if (this.form.get('apertureType')?.value === 'rectangular') {
-      return this.apiService.setRectangularAperture(
-        simulationId,
-        this.form.value.apertureHeight,
-        this.form.value.apertureWidth,
-        this.form.value.apertureZAxisHeight
-      );
-    }
-    return Promise.reject(new Error('Invalid aperture type'))
-  }
-
-  setSourceRequest(simulationId: string): Promise<any> {
-    if (this.form.get('sourceType')?.value === 'prismatica') {
-      return this.apiService.setCuboidSource(
-        simulationId,
-        this.form.value.prismHeight,
-        this.form.value.prismWidth,
-        this.form.value.prismDepth,
-      );
-    } else if (this.form.get('sourceType')?.value === 'esferica') {
-      return this.apiService.setSphericalSource(
-        simulationId,
-        this.form.value.sphereRadius,
-      );
-    } else if (this.form.get('sourceType')?.value === 'cilindrica') {
-      return this.apiService.setCylindricalSource(
-        simulationId,
-        this.form.value.cylinderHeight,
-        this.form.value.cylinderRadius,
-      );
-    }
-    return Promise.reject(new Error('Invalid source type'));
+    this.apiService.createNewContext(request).subscribe({
+      next: () => {
+        this.notificationService.showAlert('Simulação criada com sucesso!', () => {
+          this.router.navigate(['/home']);
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao criar simulação:', err);
+        this.notificationService.showAlert('Falha ao criar simulação');
+      }
+    });
   }
 
   updateApertureFields(value: string) {

@@ -20,7 +20,16 @@
     align-items: center;
     padding-bottom: 15px;
     border-bottom: 1px solid #e0e0e0;
+    height: 15%;
+
+
+    img {
+        width: 140px;
+        height: auto;
+        object-fit: contain;
+    }
 }
+
 
 .header h1 {
     font-size: 1.8rem;
@@ -94,14 +103,43 @@ button:hover {
         padding: 15px;
         box-shadow: 2px 2px 2px 2px black
     }
+    // .header {
+    //     margin-top: 20px;
+    //     text-align: center;
+    //     margin-bottom: 20px;
+    //     border-bottom: 2px solid #26538C;
+    //     padding-bottom: 10px;
+    //     display: flex;
+    //     flex-direction: column;
+    // }
+
     .header {
-        margin-top: 20px;
-        text-align: center;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #26538C;
-        padding-bottom: 10px;
-        display: flex;
-        flex-direction: column;
+        flex-direction: row !important; /* Força layout em linha */
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 15px;
+
+        img {
+            width: 80px !important;
+            height: auto;
+            margin-right: 20px;
+        }
+
+        h1 {
+            text-align: left !important;
+            font-size: 24pt !important;
+            margin: 0 !important;
+            flex-grow: 1;
+        }
+
+        p {
+            position: absolute;
+            left: 100px; /* Ajuste conforme necessário */
+            top: 60px;   /* Posiciona abaixo da linha do título */
+            width: auto;
+            text-align: left;
+            margin: 0 !important;
+        }
     }
     
     .section {

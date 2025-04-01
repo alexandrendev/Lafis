@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +12,15 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 })
 export class AppComponent {
   title = 'Lafis';
+  showSidebar: boolean = true;
+
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const hiddenRoutes = ['/login', '/register', '/forgot-password'];
+        this.showSidebar = !hiddenRoutes.some(route => event.urlAfterRedirects.includes(route));
+        // this.showSidebar = !event.urlAfterRedirects.includes('/login');
+      });
+  }
 }

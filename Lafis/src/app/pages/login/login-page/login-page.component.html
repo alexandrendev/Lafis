@@ -1,0 +1,31 @@
+<div class="container">
+
+
+    <div class="col-1">
+        <img src="/assets/logoLafis.png" alt="">
+        <p>Seja Bem Vindo!</p>
+    </div>
+    <div class="col-2">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <p>Faça login com seu usuário e senha.</p>
+            
+
+            <label for="login">Login:</label>
+            <input type="text" formControlName="login" placeholder="Usuário" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" formControlName="password" placeholder="Senha" required>
+            <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
+            <!-- <div class="register-link">
+                <a routerLink="/register">Registrar-se</a>
+            </div>
+            <div class="forgot-password">
+                <a routerLink="/forgot-password">Esqueci minha senha</a>
+            </div> -->
+            <div class="error-message" *ngIf="error">
+                {{ error }}
+            </div>
+        </form>
+
+    </div>
+</div>

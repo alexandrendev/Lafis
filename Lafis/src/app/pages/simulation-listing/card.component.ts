@@ -18,7 +18,9 @@ export class CardComponent implements OnInit {
   selectedSimulation!: Simulation;
   isLoading: { [key: string]: boolean } = {};
 
-  constructor(private api: ApiService, private notificationService: NotificationService, private router: Router) {}
+  private readonly api = new ApiService();
+
+  constructor(private notificationService: NotificationService, private router: Router) {}
 
   openReport(id: String){
     this.router.navigate(['/teste', id]);
@@ -33,17 +35,17 @@ export class CardComponent implements OnInit {
 
     this.isLoading[simulationId] = true;
 
-    try {
-      const result = await this.api.startSimulation(simulationId);
-      if(result){
-        this.notificationService.showAlert("Simulação iniciada com sucesso!");
-        this.ngOnInit();
+    this.api.startSimulation(simulationId).subscribe({
+      next: () => {
+          this.notificationService.showAlert("Simulação iniciada com sucesso!");
+          this.ngOnInit();
+
+      },
+      error: (error) => {
+        this.notificationService.showAlert("Falha ao iniciar a simulação.");
+        console.error("Falha ao iniciar a simulação:", error);
       }
-    } catch (error) {
-      this.notificationService.showAlert("Falha ao iniciar a simulação.");
-    } finally {
-      this.isLoading[simulationId] = false;
-    }
+    });
   }
 
   showNotification(){
@@ -53,17 +55,17 @@ export class CardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.api
-      .getAllSimulations()
-      .then((simulations) => {
+    this.api.getAllSimulations().subscribe({
+      next: (simulations: Simulation[]) => {
         this.simulations = simulations;
         if (this.simulations.length < 1) {
           this.showNotification();
         }
-      })
-      .catch((error) => {
+      },
+      error: (error: any) => {
         console.error('Erro ao buscar simulações:', error);
-      });
+      }
+    });
   }
 }
 

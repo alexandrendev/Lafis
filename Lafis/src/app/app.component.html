@@ -1,5 +1,7 @@
 <div class="app-container">
-  <app-sidebar></app-sidebar>
+  @if(showSidebar){
+    <app-sidebar></app-sidebar>
+  }
   <div class="content">
     <router-outlet></router-outlet>
   </div>
