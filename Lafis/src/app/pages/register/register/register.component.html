@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="col-1">
+        <img src="/assets/logoLafis.png" alt="Logo LaFis">
+        <p>Crie sua conta</p>
+    </div>
+    <div class="col-2">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+            <p>Preencha seus dados para cadastro</p>
+            
+
+            <label for="email">E-mail:</label>
+            <input type="email" formControlName="email" placeholder="seu@email.com" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" formControlName="password" placeholder="Mínimo 8 caracteres" required>
+
+            <label for="confirmPassword">Confirme a senha:</label>
+            <input type="password" formControlName="confirmPassword" placeholder="Digite novamente" required>
+
+            <button type="submit" [disabled]="registerForm.invalid">Registrar</button>
+
+            <div class="login-link">
+                <p>Já tem uma conta? <a href="">Faça login</a></p>
+            </div>
+
+            @if(error){
+                <div class="error-message">
+                    {{ error }}
+                </div>
+            }
+            
+        </form>
+    </div>
+</div>
