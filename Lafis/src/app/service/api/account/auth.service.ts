@@ -24,4 +24,16 @@ export class AuthService {
         })
       );
   }
+
+  public register(login: string, password: string){
+    const headers = new HttpHeaders().set('useAuth', 'n');
+
+    return this._httpClient.post('http://localhost:8080/auth/register',
+      {
+        login,
+        password,
+      },
+      {headers},
+    );
+  }
 }
