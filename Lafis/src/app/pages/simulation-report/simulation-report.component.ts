@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartProviderService } from '../../service/chart/chart-provider.service';
+import { MathService } from '../../service/math/math.service';
 
 @Component({
   selector: 'app-simulation-report',
@@ -21,8 +22,11 @@ export class SimulationReportComponent implements OnInit{
   pieChartData;
   public pieChartType: ChartType = 'pie';
   solidAngle!: number;
+  error!: number;
+  escapedPercent!: number;
 
   private readonly api = inject(ApiService);
+  private readonly _math = inject(MathService);
 
   constructor(private route: ActivatedRoute, private chart: ChartProviderService){
 
@@ -57,6 +61,8 @@ export class SimulationReportComponent implements OnInit{
     this.pieChartData = { ...this.chart.pieChartData };
 
     this.solidAngle = (4* Math.PI * this.simulation.escaped) / this.simulation.emissions;
+    this.error = this._math.getSolidAngleDeviation(this.solidAngle, this.simulation.emissions);
+    this.escapedPercent = (this.simulation.escaped / this.simulation.emissions) * 100;
   }
 
   printReport(){

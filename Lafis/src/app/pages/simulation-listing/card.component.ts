@@ -39,12 +39,11 @@ export class CardComponent implements OnInit {
       next: () => {
           this.notificationService.showAlert("Simulação iniciada com sucesso!");
           this.ngOnInit();
-
       },
-      error: (error) => {
-        this.notificationService.showAlert("Falha ao iniciar a simulação.");
-        console.error("Falha ao iniciar a simulação:", error);
-      }
+      // error: (error) => {
+      //   this.notificationService.showAlert("Falha ao iniciar a simulação.", error);
+      //   console.error("Falha ao iniciar a simulação:", error);
+      // }
     });
   }
 
@@ -58,9 +57,9 @@ export class CardComponent implements OnInit {
     this.api.getAllSimulations().subscribe({
       next: (simulations: Simulation[]) => {
         this.simulations = simulations;
-        if (this.simulations.length < 1) {
-          this.showNotification();
-        }
+        // if (this.simulations.length < 1) {
+        //   this.showNotification();
+        // }
       },
       error: (error: any) => {
         console.error('Erro ao buscar simulações:', error);

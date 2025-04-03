@@ -1,13 +1,11 @@
 <h1 style="color: #26538C; margin-top: 20px;">Nova Simulação</h1>
 <div class="container">
   <form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
-    <!-- <label for="title">Nome/Identificação da simulação:</label>
-    <input type="text" id="title"> -->
 
     <label for="emissions">Quantidade de emissões:</label>
     <input type="number" name="emissions" formControlName="emissions">
 
-    <label for="sourceZAxisHeight">Altura da fonte no eixo vertical (cm):</label>
+    <label for="sourceZAxisHeight">Posição da fonte no eixo vertical (cm):</label>
     <input type="number" name="sourceZAxisHeight" formControlName="sourceZAxisHeight">
 
     <label for="apertures">Tipo de abertura:</label>
@@ -18,18 +16,23 @@
     <label for="apertureZAxisHeight">Altura da base até a abertura (cm):</label>
     <input type="number" name="apertureZAxisHeight" id="apertureZAxisHeight" formControlName="apertureZAxisHeight" (change)="onApertureChange()">
 
-    <div *ngIf="form.get('apertureType')?.value === 'circular'" style="display: flex; flex-direction: column;">
-      <label for="apertureRadius">Raio (cm):</label>
-      <input type="number" id="apertureRadius" formControlName="apertureRadius" name="radius" (change)="updateScene()">
-    </div>
+    @if(form.get('apertureType')?.value === 'circular'){
+      <div style="display: flex; flex-direction: column;">
+        <label for="apertureRadius">Raio (cm):</label>
+        <input type="number" id="apertureRadius" formControlName="apertureRadius" name="radius" (change)="updateScene()">
+      </div>  
+    }
 
-    <div *ngIf="form.get('apertureType')?.value === 'rectangular'" style="display: flex; flex-direction: column;">
-      <label for="apertureHeight">Largura no eixo X (cm):</label>
-      <input type="number" formControlName="apertureHeight" name="apertureHeight" (change)="updateScene()">
+    @if(form.get('apertureType')?.value === 'rectangular'){
+      <div style="display: flex; flex-direction: column;">
+        <label for="apertureHeight">Largura no eixo X (cm):</label>
+        <input type="number" formControlName="apertureHeight" name="apertureHeight" (change)="updateScene()">
+  
+        <label for="apertureWidth">Largura no eixo y (cm):</label>
+        <input type="number" formControlName="apertureWidth" name="apertureWidth" (change)="updateScene()">
+      </div>
+    }
 
-      <label for="apertureWidth">Largura no eixo y (cm):</label>
-      <input type="number" formControlName="apertureWidth" name="apertureWidth" (change)="updateScene()">
-    </div>
 
     <label for="fontes">Tipo de fonte:</label>
     <select name="fontes" formControlName="sourceType" id="fontes" (change)="onsourceTypeChange()">
@@ -38,27 +41,39 @@
       <option value="cilindrica">Cilíndrica</option>
     </select>
 
+    @if(form.get('sourceType')?.value === 'prismatica'){
 
-    <div *ngIf="form.get('sourceType')?.value === 'prismatica'" style="display: flex; flex-direction: column;">
+      <div style="display: flex; flex-direction: column;">
         <label for="prismHeight">Altura do prisma (cm):</label>
         <input type="number" id="prismHeight" formControlName="prismHeight" name="prismHeight" (change)="updateScene()">
         <label for="prismWidth">Largura do prisma (cm):</label>
         <input type="number" id="prismWidth" formControlName="prismWidth" name="prismWidth" (change)="updateScene()">
         <label for="prismDepth">Profundidade do prisma (cm):</label>
-        <input type="number" name="prismDepth" id="prismDepth" formControlName="prismDepth" (change)="updateScene()">
-    </div>
+        <input type="number" name="prismDepth" id="prismDepth" formControlName="prismDepth" (change)="updateScene()">  
+      </div>
+      
+    }
 
-    <div *ngIf="form.get('sourceType')?.value === 'esferica'" style="display: flex; flex-direction: column;">
-      <label for="sphereRadius">Raio da esfera (cm):</label>
-      <input type="number" id="sphereRadius" formControlName="sphereRadius" name="sphereRadius" (change)="updateScene()">
-    </div>
+    
+    @if(form.get('sourceType')?.value === 'esferica'){
+      <div style="display: flex; flex-direction: column;">
+        <label for="sphereRadius">Raio da esfera (cm):</label>
+        <input type="number" id="sphereRadius" formControlName="sphereRadius" name="sphereRadius" (change)="updateScene()">
+      </div>
+    }
 
-    <div *ngIf="form.get('sourceType')?.value === 'cilindrica'" style="display: flex; flex-direction: column;">
-      <label for="cylinderHeight">Altura do cilindro (cm):</label>
-      <input type="number" id="cylinderHeight" formControlName="cylinderHeight" name="cylinderHeight" (change)="updateScene()">
-      <label for="cylinderRadius">Raio do cilindro (cm):</label>
-      <input type="number" id="cylinderRadius" formControlName="cylinderRadius" name="cylinderRadius" (change)="updateScene()">
-    </div>
+    
+
+    @if(form.get('sourceType')?.value === 'cilindrica'){
+      <div style="display: flex; flex-direction: column;">
+        <label for="cylinderHeight">Altura do cilindro (cm):</label>
+        <input type="number" id="cylinderHeight" formControlName="cylinderHeight" name="cylinderHeight" (change)="updateScene()">
+        <label for="cylinderRadius">Raio do cilindro (cm):</label>
+        <input type="number" id="cylinderRadius" formControlName="cylinderRadius" name="cylinderRadius" (change)="updateScene()">
+      </div>
+      
+    }
+    
 
     <button [disabled]="form.invalid" type="submit">Enviar</button>
   </form>

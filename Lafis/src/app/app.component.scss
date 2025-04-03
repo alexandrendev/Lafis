@@ -10,6 +10,10 @@ body{
   }
   .content {
     padding-left: 0px;
+    border-radius: 0px;
     flex-grow: 1;
     overflow-y: auto;
+    background: linear-gradient(to right, #e5e5e5, #d0d0d0);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.05); /* borda sutil */
   }

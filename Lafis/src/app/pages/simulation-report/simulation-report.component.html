@@ -15,7 +15,7 @@
                     </div>
                     <app-info-item [label]="'ID'" [value]="simulation.id"></app-info-item>
                     <app-info-item [label]="'Emissões'" [value]="simulation.emissions | number"></app-info-item>
-                    <app-info-item [label]="'Vazão'" [value]="simulation.escaped | number"></app-info-item>
+                    <app-info-item [label]="'Vazão'" [value]="(simulation.escaped | number) + ' (' + (escapedPercent | number:'1.1-1') + '%)'"></app-info-item>
                     <app-info-item [label]="'Status'" [value]="simulation.status"></app-info-item>
                     <app-info-item [label]="'Criada em'" [value]="simulation.created | date:'dd MMM yyyy - HH:mm'"></app-info-item>
                     <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
@@ -29,7 +29,8 @@
                         <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'pie'"></canvas>
                     </div>
 
-                    <app-info-item [label]="'Ângulo sólido calculado'" [value]="solidAngle | number"></app-info-item>
+                    <app-info-item [label]="'Ângulo sólido calculado'" [value]="(solidAngle | number:'1.5-5') + ' ± ' + (error | number)"></app-info-item>
+                    <app-info-item [label]="'Erro calculado'" [value]="error | number"></app-info-item>
                 </div>
             </div>
 
@@ -39,37 +40,38 @@
                         <h3>Informações da Abertura</h3>
                     </div>
                     <app-info-item [label]="'Tipo de Abertura'" [value]="simulation.context.aperture.type"></app-info-item>
-                    <app-info-item [label]="'Altura da base até a abertura'" [value]="simulation.context.aperture.height + 'cm'"></app-info-item>
+                    <app-info-item [label]="'Altura do poço'" [value]="simulation.context.aperture.height + 'cm'"></app-info-item>
                     
-                    <div *ngIf="simulation.context.aperture.type === 'rectangular'">
+                    @if(simulation.context.aperture.type === 'rectangular'){
                         <app-info-item [label]="'Largura Abertura'" [value]="simulation.context.aperture.width + 'cm'"></app-info-item>
                         <app-info-item [label]="'Profundidade da Abertura'" [value]="simulation.context.aperture.depth + 'cm'"></app-info-item>
-                    </div>
-    
-                    <div *ngIf="simulation.context.aperture.type !== 'rectangular'">
+                    }
+
+                    @if(simulation.context.aperture.type !== 'rectangular'){
                         <app-info-item [label]="'Raio da Abertura'" [value]="simulation.context.aperture.radius + 'cm'"></app-info-item>
-                    </div>
+                    }
                 </div>
                 <div class="col">
                     <div class="section">
                         <h3>Informações da Fonte</h3>
                     </div>
                     <app-info-item [label]="'Tipo de Fonte'" [value]="simulation.context.source.type"></app-info-item>
-                    <app-info-item [label]="'Altura da fonte no eixo z'" [value]="simulation.sourceHeight + 'cm'"></app-info-item>
-                    <div *ngIf="simulation.context.source.type === 'cuboid'">
+                    <app-info-item [label]="'Posição da fonte no eixo vertical (z)'" [value]="simulation.sourceHeight + 'cm'"></app-info-item>
+
+                    @if(simulation.context.source.type === 'cuboid'){
                         <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
                         <app-info-item [label]="'Largura da Fonte'" [value]="simulation.context.source.width + 'cm'"></app-info-item>
                         <app-info-item [label]="'Profundidade da Fonte'" [value]="simulation.context.source.depth + 'cm'"></app-info-item>
-                    </div>
-    
-                    <div *ngIf="simulation.context.source.type === 'cylindrical'">
+                    }
+
+                    @if(simulation.context.source.type === 'cylindrical'){
                         <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
                         <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
-                    </div>
-    
-                    <div *ngIf="simulation.context.source.type === 'spherical'">
+                    }
+
+                    @if(simulation.context.source.type === 'spherical'){
                         <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
-                    </div>
+                    }
                 </div>
             </div>
 

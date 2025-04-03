@@ -2,74 +2,65 @@
     <div class="title-container">
         <h2>Listagem de Simulações</h2>
     </div>
-    <!-- <div class="button-container">
-        <a href="#">Mais antigas primeiro</a>
-        <a href="#">Mais recentes primeiro</a>
-    </div> -->
 </div>
 
-<div *ngIf="simulations.length > 0;">
-    <div *ngFor="let simulation of simulations" class="card-container">
-        <div class="card-header">
-        </div>
-        <h2>{{simulation.created | date: 'medium'}}</h2>
-    
-        <div class="info">
-
-            <app-info-item
-                    [label] ="'Tipo de Abertura:'"
-                    [value] ="simulation.context.aperture.type"
-                ></app-info-item>
-
-                <app-info-item
-                    [label] ="'Tipo de Fonte:'"
-                    [value] ="simulation.context.source.type"
-                ></app-info-item>
-
-                <app-info-item
-                    [label] ="'Quantidade de emissões:'"
-                    [value] ="simulation?.emissions | number"
-                ></app-info-item>
-
-                <app-info-item
-                    [label] ="'Status:'"
-                    [value] ="simulation.status"
-                ></app-info-item>
-        </div>
-    
-        <div class="card-footer">
-            <div class="button information" >
-                <a (click)="openReport(simulation.id)">
-                    <img src="/assets/info-white.svg">
-                    <p>Visualizar Relatório</p>
-                </a>
+@if (simulations.length > 0) {
+    @for (simulation of simulations; track simulation.id) {
+        <div class="card-container">
+            <div class="card-header">
+                <h2>{{ simulation.created | date: 'medium' }}</h2>
             </div>
-            <div *ngIf="simulation.status === 'CREATED'">
-                <!-- <div class="button confirm">
-                    <a (click)="startSimulation(simulation.id)" [class.loading]="isLoading[simulation.id]" [disabled]="isLoading[simulation.id]">
-                        <img *ngIf="!isLoading[simulation.id]" src="/assets/play-icon.svg">
-                        <p>{{ isLoading[simulation.id] ? 'Iniciando...' : 'Iniciar Simulação' }}</p>
-                    </a>
-                </div> -->
-
-                <div class="button confirm">
-                    <a (click)="!isLoading[simulation.id] && startSimulation(simulation.id)"
-                       [class.loading]="isLoading[simulation.id]"
-                       [class.disabled]="isLoading[simulation.id]">
-                      <img *ngIf="!isLoading[simulation.id]" src="/assets/play-icon.svg">
-                      <p>{{ isLoading[simulation.id] ? 'Iniciando...' : 'Iniciar Simulação' }}</p>
-                    </a>
-                  </div>
+        
+            <div class="info">
+                <app-info-item
+                    [label]="'Tipo de Abertura:'"
+                    [value]="simulation.context.aperture.type">
+                </app-info-item>
+    
+                <app-info-item
+                    [label]="'Tipo de Fonte:'"
+                    [value]="simulation.context.source.type">
+                </app-info-item>
+    
+                <app-info-item
+                    [label]="'Quantidade de emissões:'"
+                    [value]="simulation.emissions | number">
+                </app-info-item>
+    
+                <app-info-item
+                    [label]="'Status:'"
+                    [value]="simulation.status">
+                </app-info-item>
             </div>
+        
+            <div class="card-footer">
+                <div class="button information">
+                    <a (click)="openReport(simulation.id)">
+                        <img src="/assets/info-white.svg" alt="Info">
+                        <p>Visualizar Relatório</p>
+                    </a>
+                </div>
+    
+                @if (simulation.status === 'CREATED') {
+                    <div class="button confirm">
+                        <a (click)="!isLoading[simulation.id] && startSimulation(simulation.id)"
+                           [class.loading]="isLoading[simulation.id]"
+                           [class.disabled]="isLoading[simulation.id]">
+                            <img src="/assets/play-icon.svg" alt="Play">
+                            <p>{{ isLoading[simulation.id] ? 'Iniciando...' : 'Iniciar Simulação' }}</p>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+} @else {
+    <div class="empty-simulation-card">
+        <div class="empty-card-content">
+            <img src="/assets/empty-folder.svg" alt="Pasta vazia" class="empty-icon">
+            <h3>Nenhuma simulação encontrada</h3>
+            <p>Você ainda não criou nenhuma simulação. Clique no botão abaixo para começar.</p>
+            <a href="\new" class="new-simulation-button">Criar primeira simulação</a>
         </div>
     </div>
-</div>
-
-<div>
-
-</div>
-<!-- <app-simulacao-detail-modal 
-  [selectedSimulation]="selectedSimulation"
-  [isOpen]="isModalOpen"
-  (closeModal)="closeModal()">
-</app-simulacao-detail-modal> -->
+}
