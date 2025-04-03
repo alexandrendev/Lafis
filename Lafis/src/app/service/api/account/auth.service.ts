@@ -1,17 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly _httpClient = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   public login(username: string, password: string): Observable<Object> {
     const headers = new HttpHeaders().set('useAuth', 'n');
 
-    return this._httpClient.post('http://localhost:8080/auth/login',
+    return this._httpClient.post(`${this.apiUrl}/login`,
       {
         login: username,
         password
@@ -28,7 +30,7 @@ export class AuthService {
   public register(login: string, password: string){
     const headers = new HttpHeaders().set('useAuth', 'n');
 
-    return this._httpClient.post('http://localhost:8080/auth/register',
+    return this._httpClient.post(`${this.apiUrl}/register`,
       {
         login,
         password,

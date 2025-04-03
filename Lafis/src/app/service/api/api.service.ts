@@ -1,12 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl: string = 'http://localhost:8080/simulation';
+  private apiUrl: string = `${environment.apiUrl}/simulation`;
 
   private readonly api = inject(HttpClient);
 
