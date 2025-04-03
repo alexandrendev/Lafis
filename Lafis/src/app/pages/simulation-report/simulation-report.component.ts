@@ -56,6 +56,7 @@ export class SimulationReportComponent implements OnInit{
   private updateCharts(): void {
     const { escaped, emissions } = this.simulation;
     this.chart.updateChartData(escaped, emissions);
+  
 
     this.chartData = { ...this.chart.chartData };
     this.pieChartData = { ...this.chart.pieChartData };

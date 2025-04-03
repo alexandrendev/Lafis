@@ -40,8 +40,23 @@ export class ChartProviderService {
   updateChartData(escaped: number, emissions: number): void {
     const emited = emissions - escaped;
 
+    const escapedPercent = (escaped / emissions) * 100;
+    const emitedPercent = 100 - escapedPercent;
+
+    this.chartData.labels = [
+      `Vazão: (${escapedPercent.toFixed(2)}%)`,
+      `Emissões: (${emitedPercent.toFixed(2)}%)`
+    ];
+
     this.chartData.datasets[0].data = [escaped, emited];
+    
+    this.pieChartData.labels = [
+      ['Vazão', `${escapedPercent.toFixed(1)}%`],
+      ['Emissões Captadas', `${emitedPercent.toFixed(1)}%`]
+    ];
     this.pieChartData.datasets[0].data = [escaped, emited];
+
+    this.chartData.datasets[0].data = [escaped, emited];
   }
 
   calculateSolidAngleAndEscapedPercentual(escaped: number, emissions: number): {

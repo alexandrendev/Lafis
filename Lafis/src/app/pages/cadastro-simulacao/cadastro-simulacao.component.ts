@@ -35,21 +35,22 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.scene = new THREE.Scene();
 
     this.form = new FormGroup({
-      emissions: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      sourceZAxisHeight: new FormControl<number>(0),
+      emissions: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
+      sourceZAxisHeight: new FormControl<number>(0, Validators.min(0)),
       apertureType: new FormControl<string>('', Validators.required),
-      apertureZAxisHeight: new FormControl<number>(0, Validators.required),
-      apertureRadius: new FormControl<number>(0),
-      apertureHeight: new FormControl<number>(0),
-      apertureWidth: new FormControl<number>(0),
+      apertureZAxisHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      apertureRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      apertureHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      apertureWidth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
       sourceType: new FormControl<string>('', Validators.required),
-      prismHeight: new FormControl<number>(0),
-      prismWidth: new FormControl<number>(0),
-      prismDepth: new FormControl<number>(0),
-      sphereRadius: new FormControl<number>(0),
-      cylinderHeight: new FormControl<number>(0),
-      cylinderRadius: new FormControl<number>(0)
+      prismHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      prismWidth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      prismDepth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      sphereRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      cylinderHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      cylinderRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)])
     });
+
 
     this.form.get('apertureType')?.valueChanges.subscribe(value => {
       this.updateApertureFields(value);
