@@ -3,6 +3,16 @@ h1 {
     color: whitesmoke;
   }
   
+  .title-container {
+    background-color: whitesmoke;
+    width: 90%;
+    margin: auto;
+    padding: auto;
+    border-radius: 25px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
   .container {
     display: flex;
     margin: 0;

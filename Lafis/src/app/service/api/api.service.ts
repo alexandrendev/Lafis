@@ -17,16 +17,8 @@ export class ApiService {
     return this.api.get(`${this.apiUrl}/id?simulationId=${id}`);
   }
 
-  async findRunning() {
-    return fetch(`${this.apiUrl}/running`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Erro ao obter todas as simulações: ${response.statusText}`);
-        }
-        return response.json();
-      }).catch(error => {
-        throw new Error(`Erro ao obter todas as simulações: ${error}`);
-      });
+  findRunning(): Observable<any> {
+    return this.api.get(`${this.apiUrl}/running`);
   }
 
   startSimulation(simulationId: string): Observable<any> {

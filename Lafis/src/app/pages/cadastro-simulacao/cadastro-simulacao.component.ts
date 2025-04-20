@@ -119,7 +119,7 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.apiService.createNewContext(request).subscribe({
       next: () => {
         this.notificationService.showAlert('Simulação criada com sucesso!', () => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/all']);
         });
       },
       error: (err) => {

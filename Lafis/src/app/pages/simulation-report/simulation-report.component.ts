@@ -61,7 +61,7 @@ export class SimulationReportComponent implements OnInit{
     this.chartData = { ...this.chart.chartData };
     this.pieChartData = { ...this.chart.pieChartData };
 
-    this.solidAngle = (4* Math.PI * this.simulation.escaped) / this.simulation.emissions;
+    this.solidAngle = this.simulation.escaped / this.simulation.emissions;
     this.error = this._math.getSolidAngleDeviation(this.solidAngle, this.simulation.emissions);
     this.escapedPercent = (this.simulation.escaped / this.simulation.emissions) * 100;
   }

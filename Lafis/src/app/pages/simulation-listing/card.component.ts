@@ -6,6 +6,7 @@ import { InfoItemComponent } from '../../components/info-item/info-item.componen
 import { NotificationService } from '../../service/notification.service';
 import { Router } from '@angular/router';
 import { Simulation } from '../../entity/Simulation';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-card',
@@ -23,7 +24,7 @@ export class CardComponent implements OnInit {
   constructor(private notificationService: NotificationService, private router: Router) {}
 
   openReport(id: String){
-    this.router.navigate(['/teste', id]);
+    this.router.navigate(['/report', id]);
   }
 
   async startSimulation(simulationId: string): Promise<void>{
@@ -65,6 +66,17 @@ export class CardComponent implements OnInit {
         console.error('Erro ao buscar simulações:', error);
       }
     });
+    interval(60000).subscribe(() => {
+      this.api.getAllSimulations().subscribe({
+        next: (simulations: Simulation[]) => {
+          this.simulations = simulations;
+        },
+        error: (error: any) => {
+          console.error('Erro ao buscar simulações:', error);
+        }
+      });
+    }
+    );
   }
 }
 

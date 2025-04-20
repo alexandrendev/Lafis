@@ -1,0 +1,91 @@
+<div class="welcome-container">
+    <!-- <div class="title-bar">
+        <h2>Bem vindo!</h2>
+    </div> -->
+
+    <div class="content">
+        <div class="welcome-content">
+            <h2 class="welcome-title">Bem-vindo!</h2>
+            
+            @if(simulations.length == 0){
+                <p class="welcome-description">
+                    O e-Mission é uma ferramenta de simulação avançada que permite a modelagem de geometrias personalizáveis de fontes isotrópicas e poços.
+                    Com uma interface intuitiva, você pode criar suas simulações e acompanhar a visualização em 3D, executar e obter relatórios detalhados, facilitando a análise e otimização de seus experimentos.
+                </p>
+    
+                <p class="cta-text">Simule, analise e otimize seus experimentos com tecnologia intuitiva e poderosa.</p>
+                
+                <div class="cta-button">
+                  <a href="/new" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Cria agora mesmo sua primeira simulação!
+                  </a>
+                </div>
+            }
+            
+            @if(simulations.length > 0){
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">{{simulations.length}}</div>
+                        <div class="metric-label">Simulações Criadas</div>
+                        <i class="fas fa-sync-alt metric-icon"></i>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-value">{{finishedSimulations}}</div>
+                        <div class="metric-label">Simulações Concluídas</div>
+                        <i class="fas fa-check-circle metric-icon"></i>
+                    </div>                
+                </div>
+                
+    
+                <div class="recent-simulations">
+                    <h3 class="section-title">
+                        <i class="fas fa-history"></i> Suas Últimas Simulações:
+                    </h3>
+                
+                    @for(simulation of simulations.slice(0, 3); track simulation.id){
+                        <div class="simulation-list">
+                            <div class="simulation-card">
+                                <div class="simulation-header">
+                                    <span class="simulation-name"> {{simulation.id}} </span>
+                                    @if(simulation.status === 'FINISHED'){
+                                        <span class="simulation-status completed">Concluída</span>
+                                    }
+                                    @if(simulation.status === 'CREATED'){
+                                        <span class="simulation-status created">Criada</span>
+                                    }
+                                    @if(simulation.status === 'RUNNING'){
+                                        <span class="simulation-status created">Em execução</span>
+                                    }
+                                    
+                                </div>
+                                <div class="simulation-details">
+                                    <span><i class="fas fa-shapes"></i> Fonte: {{simulation.context.source.type}}</span>
+                                    <span><i class="fas fa-crop"></i> Abertura: {{simulation.context.aperture.type}}</span>
+                                    <span><i class="fas fa-clock"></i> Criada em: {{simulation.created | date:'dd/MM/yyyy - HH:mm'}} </span>
+                                </div>
+                            </div>    
+                    </div>
+                    }
+
+                    <footer class="footer">
+                        <p>Desenvolvido e mantido no <strong>Laboratório de Física</strong> do <strong>Instituto Federal Goiano, Campus Ceres</strong>.</p>
+                        <p>Conecte-se conosco:</p>
+                        <div class="social-links">
+                            <a href="https://www.instagram.com/ifgoiano" target="_blank" class="social-icon">
+                                <i class="fab fa-instagram"></i>
+                                Instagram
+                            </a>
+                        </div>
+                        <p>email: lafis&#64;ifgoiano.edu.br</p>
+                    </footer>
+
+                </div>    
+            }
+
+
+                    
+        </div>
+    </div>
+</div>

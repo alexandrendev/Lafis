@@ -6,12 +6,14 @@ import { LoginPageComponent } from './pages/login/login-page/login-page.componen
 import { RegisterComponent } from './pages/register/register/register.component';
 import { authGuard } from './guards/auth-guard.guard';
 import { noAuthGuard } from './guards/no-auth.guard';
+import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
     {path: '', pathMatch: 'full' ,redirectTo: 'login'},
     {path: 'register', component: RegisterComponent, canActivate: [noAuthGuard]},
     {path: 'login', component: LoginPageComponent, canActivate: [noAuthGuard]},
     {path: 'new', component: CadastroSimulacaoComponent, canActivate: [authGuard]},
-    {path: 'home', component: CardComponent, canActivate: [authGuard]},
-    {path: 'teste/:id', component: SimulationReportComponent, canActivate: [authGuard]}
+    {path: 'all', component: CardComponent, canActivate: [authGuard]},
+    {path: 'home', component: HomeComponent, canActivate: [authGuard]},
+    {path: 'report/:id', component: SimulationReportComponent, canActivate: [authGuard]}
 ];
