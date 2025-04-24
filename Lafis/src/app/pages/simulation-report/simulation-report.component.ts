@@ -24,6 +24,7 @@ export class SimulationReportComponent implements OnInit{
   solidAngle!: number;
   error!: number;
   escapedPercent!: number;
+  emissionsPerSecond!: number;
 
   private readonly api = inject(ApiService);
   private readonly _math = inject(MathService);
@@ -64,6 +65,27 @@ export class SimulationReportComponent implements OnInit{
     this.solidAngle = this.simulation.escaped / this.simulation.emissions;
     this.error = this._math.getSolidAngleDeviation(this.solidAngle, this.simulation.emissions);
     this.escapedPercent = (this.simulation.escaped / this.simulation.emissions) * 100;
+
+    const seconds = this.extractTotalSeconds(this.simulation.duration);
+
+    this.emissionsPerSecond = this.simulation.emissions / seconds;
+
+  }
+
+  private extractTotalSeconds(timeStr: string): number {
+    const regex = /(\d+)\s*min\s*(\d+)\s*sec\s*(\d+)\s*ms/;
+    const matches = timeStr.match(regex);
+  
+    if (matches) {
+      const minutes = parseInt(matches[1], 10);
+      const seconds = parseInt(matches[2], 10);
+      const milliseconds = parseInt(matches[3], 10);
+  
+      const totalSeconds = minutes * 60 + seconds + milliseconds / 1000;
+      return totalSeconds;
+    } else {
+      throw new Error('Formato de tempo inválido');
+    }
   }
 
   printReport(){

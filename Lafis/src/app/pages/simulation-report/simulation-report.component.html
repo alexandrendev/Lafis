@@ -19,6 +19,7 @@
                     <app-info-item [label]="'Status'" [value]="simulation.status"></app-info-item>
                     <app-info-item [label]="'Criada em'" [value]="simulation.created | date:'dd MMM yyyy - HH:mm'"></app-info-item>
                     <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
+                    <app-info-item [label]="'Emissões por segundo'" [value]="emissionsPerSecond | number:'1.1-1'"></app-info-item>
                 </div>
 
                 <div class="col">
