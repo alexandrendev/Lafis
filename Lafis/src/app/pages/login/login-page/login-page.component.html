@@ -16,11 +16,12 @@
             <input type="password" formControlName="password" placeholder="Senha" required>
             <button type="submit" [disabled]="loginForm.invalid">Entrar</button>
 
-            <!-- <div class="forgot-password">
-                <a routerLink="/forgot-password">Esqueci minha senha</a>
-            </div> -->
             <div class="register-link">
                 <p>Ainda não tem uma conta? <a href="/register">Crie sua conta</a></p>
+            </div>
+
+            <div class="register-link">
+                <a href="/">Esqueci minha senha</a>
             </div>
             @if(error){
                 <div class="error-message">

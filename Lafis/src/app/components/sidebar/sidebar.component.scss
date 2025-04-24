@@ -2,7 +2,7 @@
   margin: 0;
   width: 240px;
   min-height: 100vh;
-  background-color: #26538C;
+  background-color: #00420c;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
@@ -65,12 +65,12 @@
     overflow: hidden;
 
     &:hover, &:focus {
-      background-color: rgba(87, 139, 241, 0.8);
+      background-color: rgba(0, 90, 12, 0.9);
       transform: translateX(4px);
     }
 
     &:active {
-      background-color: rgba(87, 139, 241, 0.6);
+      background-color: rgba(0, 90, 12, 0.9);
     }
   }
 

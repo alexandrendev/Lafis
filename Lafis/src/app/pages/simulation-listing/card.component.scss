@@ -13,7 +13,7 @@
 .title-container {
     font-size: 1.5rem;
     font-weight: semibold;
-    color: black;
+    color: rgba(0, 90, 12, 0.9);
     text-align: center;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .card-container:not(:last-child) {
-    border-bottom: 2px solid #26538C;
+    border-bottom: 2px solid rgba(0, 90, 12, 0.5);;
     padding-bottom: 10px;
 }
 

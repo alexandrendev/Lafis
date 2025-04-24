@@ -1,7 +1,7 @@
 .container {
     height: 100vh;
     display: flex;
-    background: linear-gradient(135deg, #1E4A7A 0%, #26538C 50%, #3A6BA6 100%);
+    background: linear-gradient(135deg, #00420c 0%, #087f23 50%, #3a9e4e 100%);
     
     @media (max-width: 768px) {
       flex-direction: column;
@@ -101,7 +101,7 @@
 
     button {
       padding: 0.8rem;
-      background: linear-gradient(to right, #1E4A7A 0%, #26538C 50%, #3A6BA6 100%);
+      background: rgba(0, 90, 12, 1);
       color: white;
       border: none;
       border-radius: 6px;
@@ -113,7 +113,7 @@
       transition: all 0.3s ease;
 
       &:hover {
-        background: linear-gradient(to right, #26538C 0%, #3A6BA6 50%, #4A7CBF 100%);
+        background: linear-gradient(135deg, #00420c 0%, #087f23 50%, #3a9e4e 100%);
         transform: translateY(-2px);
       }
 
