@@ -3,10 +3,11 @@ import { Simulation } from '../../entity/Simulation';
 import { ApiService } from '../../service/api/api.service';
 import { OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { VideoItemComponent } from '../../components/video-item/video-item.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, VideoItemComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

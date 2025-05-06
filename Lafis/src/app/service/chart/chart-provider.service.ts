@@ -22,7 +22,7 @@ export class ChartProviderService {
     datasets: [
       {
         data: [0, 0],
-        backgroundColor: ['#A8A8A8', '#36A2EB'],
+        backgroundColor: ['#A8A8A8', '#005a0ce6'],
       },
     ],
   };

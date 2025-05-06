@@ -62,11 +62,11 @@
 .section h3 {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: #26538C;
+    color: rgba(0, 90, 12, 0.9);
 }
 
 button {
-    background-color: #26538C;
+    background-color: rgba(0, 90, 12, 0.9);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -76,7 +76,7 @@ button {
 }
 
 button:hover {
-    background-color: #578BF1;
+    background-color: #00420c;
 }
 
 @media print {
@@ -93,7 +93,6 @@ button:hover {
     .center{
         display: flex;
         justify-content: center;
-        // padding-top: 15px;
     }
     
     .report{
@@ -103,15 +102,7 @@ button:hover {
         padding: 15px;
         box-shadow: 2px 2px 2px 2px black
     }
-    // .header {
-    //     margin-top: 20px;
-    //     text-align: center;
-    //     margin-bottom: 20px;
-    //     border-bottom: 2px solid #26538C;
-    //     padding-bottom: 10px;
-    //     display: flex;
-    //     flex-direction: column;
-    // }
+
 
     .header {
         flex-direction: row !important;
@@ -145,7 +136,7 @@ button:hover {
     .section {
         margin-top: 10px;
         text-align: center;
-        border-bottom: 2px solid #26538C;
+        border-bottom: 2px solid #00420c;
         padding-bottom: 10px;
     }
     
