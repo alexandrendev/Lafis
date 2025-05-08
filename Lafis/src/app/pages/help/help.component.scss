@@ -1,0 +1,98 @@
+.center {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+p, h2, h1{
+    justify-content: center;
+}
+
+.welcome-description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.cta-text {
+    font-size: 1.2rem;
+    margin: 2.5rem 0;
+    color: #333;
+    font-weight: 500;
+}
+
+.cta-button .btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.video-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.app-video-item {
+    margin-bottom: 15px;
+}
+
+.app-video-item a {
+    display: block;
+    background-color: #e9c46a;
+    padding: 15px;
+    border-radius: 8px;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.app-video-item a:hover {
+    background-color: #f4a261;
+}
+
+
+@media (max-width: 768px) {
+    .center {
+        padding: 15px;
+    }
+
+    .welcome-description {
+        font-size: 16px;
+    }
+
+    .cta-text {
+        font-size: 18px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .cta-button .btn-primary {
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+}
