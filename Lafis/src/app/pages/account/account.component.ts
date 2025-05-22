@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { InfoItemComponent } from '../../components/info-item/info-item.component';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-account',
   imports: [InfoItemComponent, CommonModule],
@@ -9,13 +10,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './account.component.scss'
 })
 export class AccountComponent {
-  created = '2023-01-01';
+  created!: string;
+  email!: string;
 
   AccountComponent(){
 
   }
 
   public requestPasswordReset(){
-    alert('Senha esquecida? Clique aqui para redefinir a sua senha.');
+    alert('Deseja alterar sua senha?');
   }
 }

@@ -18,7 +18,7 @@ export class AppComponent {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        const hiddenRoutes = ['/login', '/register', '/forgot-password'];
+        const hiddenRoutes = ['/login', '/register', '/password-reset'];
         this.showSidebar = !hiddenRoutes.some(route => event.urlAfterRedirects.includes(route));
         // this.showSidebar = !event.urlAfterRedirects.includes('/login');
       });
