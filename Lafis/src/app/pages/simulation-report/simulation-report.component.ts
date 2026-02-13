@@ -8,6 +8,7 @@ import { ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartProviderService } from '../../service/chart/chart-provider.service';
 import { MathService } from '../../service/math/math.service';
+import { TranslationServiceService } from '../../service/helpers/translation-service.service';
 
 @Component({
   selector: 'app-simulation-report',
@@ -29,7 +30,11 @@ export class SimulationReportComponent implements OnInit{
   private readonly api = inject(ApiService);
   private readonly _math = inject(MathService);
 
-  constructor(private route: ActivatedRoute, private chart: ChartProviderService){
+  constructor(
+    private route: ActivatedRoute,
+    private chart: ChartProviderService,
+    public translationService: TranslationServiceService
+    ){
 
     this.chartOptions = this.chart.chartOptions;
     this.chartData = this.chart.chartData;

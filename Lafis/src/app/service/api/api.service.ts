@@ -33,7 +33,10 @@ export class ApiService {
       }));
   }
 
-  createNewSimulation(emissions: number, sourceHeight: number): Observable<any> {
+  createNewSimulation(
+    emissions: number, 
+    sourceHeight: number
+  ): Observable<any> {
 
     return this.api.post(`${this.apiUrl}/new`, { emissions, sourceHeight });
   }

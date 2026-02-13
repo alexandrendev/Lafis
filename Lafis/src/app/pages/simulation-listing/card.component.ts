@@ -7,6 +7,7 @@ import { NotificationService } from '../../service/notification.service';
 import { Router } from '@angular/router';
 import { Simulation } from '../../entity/Simulation';
 import { interval } from 'rxjs';
+import { TranslationServiceService } from '../../service/helpers/translation-service.service';
 
 @Component({
   selector: 'app-card',
@@ -21,7 +22,11 @@ export class CardComponent implements OnInit {
 
   private readonly api = new ApiService();
 
-  constructor(private notificationService: NotificationService, private router: Router) {}
+  constructor(
+    private notificationService: NotificationService,
+    private router: Router,
+    public translationService: TranslationServiceService
+  ) {}
 
   openReport(id: String){
     this.router.navigate(['/report', id]);

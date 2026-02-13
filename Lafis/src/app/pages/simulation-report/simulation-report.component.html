@@ -16,7 +16,7 @@
                     <app-info-item [label]="'ID'" [value]="simulation.id"></app-info-item>
                     <app-info-item [label]="'Emissões'" [value]="simulation.emissions | number"></app-info-item>
                     <app-info-item [label]="'Vazão'" [value]="(simulation.escaped | number) + ' (' + (escapedPercent | number:'1.1-1') + '%)'"></app-info-item>
-                    <app-info-item [label]="'Status'" [value]="simulation.status"></app-info-item>
+                    <app-info-item [label]="'Status'" [value]="translationService.translateStatus(simulation.status)"></app-info-item>
                     <app-info-item [label]="'Criada em'" [value]="simulation.created | date:'dd MMM yyyy - HH:mm'"></app-info-item>
                     <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
                     <app-info-item [label]="'Emissões por segundo'" [value]="emissionsPerSecond | number:'1.1-1'"></app-info-item>
@@ -39,7 +39,7 @@
                     <div class="section">
                         <h3>Informações da Abertura</h3>
                     </div>
-                    <app-info-item [label]="'Tipo de Abertura'" [value]="simulation.context.aperture.type"></app-info-item>
+                    <app-info-item [label]="'Tipo de Abertura'" [value]="translationService.translateApertureType(simulation.context.aperture.type)"></app-info-item>
                     <app-info-item [label]="'Altura do poço'" [value]="simulation.context.aperture.height + 'cm'"></app-info-item>
                     
                     @if(simulation.context.aperture.type === 'rectangular'){
@@ -55,7 +55,7 @@
                     <div class="section">
                         <h3>Informações da Fonte</h3>
                     </div>
-                    <app-info-item [label]="'Tipo de Fonte'" [value]="simulation.context.source.type"></app-info-item>
+                    <app-info-item [label]="'Tipo de Fonte'" [value]="translationService.translateSourceType(simulation.context.source.type)"></app-info-item>
                     <app-info-item [label]="'Posição da fonte no eixo vertical (z)'" [value]="simulation.sourceHeight + 'cm'"></app-info-item>
 
                     @if(simulation.context.source.type === 'cuboid'){
