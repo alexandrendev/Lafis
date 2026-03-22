@@ -69,17 +69,17 @@ export class SimulationReportComponent implements OnInit{
 
   get pointCenterX(): number | undefined {
     const source = this.simulation?.context?.source as any;
-    return source?.x ?? source?.centerX;
+    return source?.centerX ?? source?.x;
   }
 
   get pointCenterY(): number | undefined {
     const source = this.simulation?.context?.source as any;
-    return source?.y ?? source?.centerY;
+    return source?.centerY ?? source?.y;
   }
 
   get pointCenterZ(): number | undefined {
     const source = this.simulation?.context?.source as any;
-    return source?.z ?? source?.centerZ;
+    return source?.centerZ ?? source?.z;
   }
 
   get apertureHeight(): number {

@@ -62,15 +62,24 @@
                         <app-info-item [label]="'Altura da Fonte'" [value]="sourceHeightValue + 'cm'"></app-info-item>
                         <app-info-item [label]="'Largura da Fonte'" [value]="sourceWidthValue + 'cm'"></app-info-item>
                         <app-info-item [label]="'Profundidade da Fonte'" [value]="sourceDepthValue + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro X'" [value]="(pointCenterX ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro Y'" [value]="(pointCenterY ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro Z'" [value]="(pointCenterZ ?? 0) + 'cm'"></app-info-item>
                     }
 
                     @if(sourceType === 'cylindrical'){
                         <app-info-item [label]="'Altura da Fonte'" [value]="sourceHeightValue + 'cm'"></app-info-item>
                         <app-info-item [label]="'Raio da Fonte'" [value]="sourceRadiusValue + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro X'" [value]="(pointCenterX ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro Y'" [value]="(pointCenterY ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro Z'" [value]="(pointCenterZ ?? 0) + 'cm'"></app-info-item>
                     }
 
                     @if(sourceType === 'spherical'){
                         <app-info-item [label]="'Raio da Fonte'" [value]="sourceRadiusValue + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro X'" [value]="(pointCenterX ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro Y'" [value]="(pointCenterY ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Centro Z'" [value]="(pointCenterZ ?? 0) + 'cm'"></app-info-item>
                     }
 
                     @if(sourceType === 'point'){
