@@ -48,7 +48,10 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       prismDepth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
       sphereRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
       cylinderHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      cylinderRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)])
+      cylinderRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      pointCenterX: new FormControl<number>(0, Validators.required),
+      pointCenterY: new FormControl<number>(0, Validators.required),
+      pointCenterZ: new FormControl<number>(0, Validators.required)
     });
 
 
@@ -104,6 +107,14 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
         radius: this.form.value.cylinderRadius
       };
       sourceType = 'CYLINDRICAL';
+    } else if (this.form.get('sourceType')?.value === 'pontual') {
+      source = {
+        type: 'point',
+        x: this.form.value.pointCenterX,
+        y: this.form.value.pointCenterY,
+        z: this.form.value.pointCenterZ
+      };
+      sourceType = 'POINT';
     }
     const request = {
       emissions: this.form.value.emissions,
@@ -165,6 +176,19 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
       this.form.get('prismWidth')?.clearValidators();
       this.form.get('prismDepth')?.clearValidators();
       this.form.get('sphereRadius')?.clearValidators();
+      this.form.get('pointCenterX')?.clearValidators();
+      this.form.get('pointCenterY')?.clearValidators();
+      this.form.get('pointCenterZ')?.clearValidators();
+    } else if (value === 'pontual') {
+      this.form.get('pointCenterX')?.setValidators(Validators.required);
+      this.form.get('pointCenterY')?.setValidators(Validators.required);
+      this.form.get('pointCenterZ')?.setValidators(Validators.required);
+      this.form.get('prismHeight')?.clearValidators();
+      this.form.get('prismWidth')?.clearValidators();
+      this.form.get('prismDepth')?.clearValidators();
+      this.form.get('sphereRadius')?.clearValidators();
+      this.form.get('cylinderHeight')?.clearValidators();
+      this.form.get('cylinderRadius')?.clearValidators();
     }
     this.form.get('prismHeight')?.updateValueAndValidity();
     this.form.get('prismWidth')?.updateValueAndValidity();
@@ -172,6 +196,9 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
     this.form.get('sphereRadius')?.updateValueAndValidity();
     this.form.get('cylinderHeight')?.updateValueAndValidity();
     this.form.get('cylinderRadius')?.updateValueAndValidity();
+    this.form.get('pointCenterX')?.updateValueAndValidity();
+    this.form.get('pointCenterY')?.updateValueAndValidity();
+    this.form.get('pointCenterZ')?.updateValueAndValidity();
   }
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -228,7 +255,8 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
   updateScene(): void {
     this.scene.clear();
     let { apertureType, sourceType, apertureZAxisHeight, apertureHeight, apertureWidth, apertureRadius,
-      prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius } = this.form.value;
+      prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius,
+      pointCenterX, pointCenterY, pointCenterZ } = this.form.value;
 
     let sourceHeight;
 
@@ -259,6 +287,10 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit {
 
       const cylinder = this.service.generateCylinder(cylinderHeight, cylinderRadius, false);
       this.scene.add(cylinder);
+    } else if (sourceType === 'pontual') {
+      const point = this.service.generateSphere(0.5);
+      point.position.set(pointCenterX, pointCenterY, pointCenterZ);
+      this.scene.add(point);
 
     }
 

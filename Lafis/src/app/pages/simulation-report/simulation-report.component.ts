@@ -59,6 +59,61 @@ export class SimulationReportComponent implements OnInit{
     }
   }
 
+  get apertureType(): string | undefined {
+    return this.simulation?.context?.aperture?.type;
+  }
+
+  get sourceType(): string | undefined {
+    return this.simulation?.context?.source?.type;
+  }
+
+  get pointCenterX(): number | undefined {
+    const source = this.simulation?.context?.source as any;
+    return source?.x ?? source?.centerX;
+  }
+
+  get pointCenterY(): number | undefined {
+    const source = this.simulation?.context?.source as any;
+    return source?.y ?? source?.centerY;
+  }
+
+  get pointCenterZ(): number | undefined {
+    const source = this.simulation?.context?.source as any;
+    return source?.z ?? source?.centerZ;
+  }
+
+  get apertureHeight(): number {
+    return this.simulation.context?.aperture?.height ?? 0;
+  }
+
+  get apertureWidth(): number {
+    return this.simulation.context?.aperture?.width ?? 0;
+  }
+
+  get apertureDepth(): number {
+    return this.simulation.context?.aperture?.depth ?? 0;
+  }
+
+  get apertureRadius(): number {
+    return this.simulation.context?.aperture?.radius ?? 0;
+  }
+
+  get sourceHeightValue(): number {
+    return this.simulation.context?.source?.height ?? 0;
+  }
+
+  get sourceWidthValue(): number {
+    return this.simulation.context?.source?.width ?? 0;
+  }
+
+  get sourceDepthValue(): number {
+    return this.simulation.context?.source?.depth ?? 0;
+  }
+
+  get sourceRadiusValue(): number {
+    return this.simulation.context?.source?.radius ?? 0;
+  }
+
   private updateCharts(): void {
     const { escaped, emissions } = this.simulation;
     this.chart.updateChartData(escaped, emissions);

@@ -1,7 +1,7 @@
-import { Component, inject, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../../../service/api/account/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,12 +20,15 @@ export class LoginPageComponent {
 
   private readonly _authService = inject(AuthService);
   private readonly _router = inject(Router);
+  private readonly _route = inject(ActivatedRoute);
+
   onLogin(){
     this._authService.login(this.loginForm.value.login, this.loginForm.value.password)
     .subscribe({
       next: (response: any) => {
         console.log(response);
-        this._router.navigate(['/home']);
+        const returnUrl = this._route.snapshot.queryParamMap.get('returnUrl');
+        this._router.navigateByUrl(returnUrl || '/home');
       },
       error: (error: any) => {
         this.error = 'Erro ao realizar login. Confira suas credenciais e tente novamente.';

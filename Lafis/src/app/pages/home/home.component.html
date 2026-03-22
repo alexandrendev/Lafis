@@ -70,8 +70,8 @@
                                     
                                 </div>
                                 <div class="simulation-details">
-                                    <span><i class="fas fa-shapes"></i> Fonte: {{simulation.context.source.type}}</span>
-                                    <span><i class="fas fa-crop"></i> Abertura: {{simulation.context.aperture.type}}</span>
+                                    <span><i class="fas fa-shapes"></i> Fonte: {{simulation.context?.source?.type || '-'}}</span>
+                                    <span><i class="fas fa-crop"></i> Abertura: {{simulation.context?.aperture?.type || '-'}}</span>
                                     <span><i class="fas fa-clock"></i> Criada em: {{simulation.created | date:'dd/MM/yyyy - HH:mm'}} </span>
                                 </div>
                             </div>    

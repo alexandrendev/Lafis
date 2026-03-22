@@ -55,6 +55,7 @@
       <option value="prismatica">Prisma retângular</option>
       <option value="esferica">Esférica</option>
       <option value="cilindrica">Cilíndrica</option>
+      <option value="pontual">Pontual</option>
     </select>
 
     @if(form.get('sourceType')?.value === 'prismatica'){
@@ -104,6 +105,22 @@
         @if(form.get('cylinderRadius')?.hasError('min')){<span>O valor deve ser positivo</span>}
       </div>
       
+    }
+
+    @if(form.get('sourceType')?.value === 'pontual'){
+      <div style="display: flex; flex-direction: column;">
+        <label for="pointCenterX">Coordenada X do ponto (cm):</label>
+        <input type="number" id="pointCenterX" formControlName="pointCenterX" name="pointCenterX" (change)="updateScene()">
+        @if(form.get('pointCenterX')?.hasError('required')){<span>Campo obrigatório.</span>}
+
+        <label for="pointCenterY">Coordenada Y do ponto (cm):</label>
+        <input type="number" id="pointCenterY" formControlName="pointCenterY" name="pointCenterY" (change)="updateScene()">
+        @if(form.get('pointCenterY')?.hasError('required')){<span>Campo obrigatório.</span>}
+
+        <label for="pointCenterZ">Coordenada Z do ponto (cm):</label>
+        <input type="number" id="pointCenterZ" formControlName="pointCenterZ" name="pointCenterZ" (change)="updateScene()">
+        @if(form.get('pointCenterZ')?.hasError('required')){<span>Campo obrigatório.</span>}
+      </div>
     }
     
 

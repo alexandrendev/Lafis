@@ -32,6 +32,14 @@ export class CardComponent implements OnInit {
     this.router.navigate(['/report', id]);
   }
 
+  getApertureType(simulation: Simulation): string | undefined {
+    return simulation?.context?.aperture?.type;
+  }
+
+  getSourceType(simulation: Simulation): string | undefined {
+    return simulation?.context?.source?.type;
+  }
+
   async startSimulation(simulationId: string): Promise<void>{
 
     if (this.isLoading[simulationId]) {
@@ -84,4 +92,3 @@ export class CardComponent implements OnInit {
     );
   }
 }
-

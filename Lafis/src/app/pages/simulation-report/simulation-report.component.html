@@ -39,38 +39,44 @@
                     <div class="section">
                         <h3>Informações da Abertura</h3>
                     </div>
-                    <app-info-item [label]="'Tipo de Abertura'" [value]="translationService.translateApertureType(simulation.context.aperture.type)"></app-info-item>
-                    <app-info-item [label]="'Altura do poço'" [value]="simulation.context.aperture.height + 'cm'"></app-info-item>
+                    <app-info-item [label]="'Tipo de Abertura'" [value]="translationService.translateApertureType(apertureType)"></app-info-item>
+                    <app-info-item [label]="'Altura do poço'" [value]="apertureHeight + 'cm'"></app-info-item>
                     
-                    @if(simulation.context.aperture.type === 'rectangular'){
-                        <app-info-item [label]="'Largura Abertura'" [value]="simulation.context.aperture.width + 'cm'"></app-info-item>
-                        <app-info-item [label]="'Profundidade da Abertura'" [value]="simulation.context.aperture.depth + 'cm'"></app-info-item>
+                    @if(apertureType === 'rectangular'){
+                        <app-info-item [label]="'Largura Abertura'" [value]="apertureWidth + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Profundidade da Abertura'" [value]="apertureDepth + 'cm'"></app-info-item>
                     }
 
-                    @if(simulation.context.aperture.type !== 'rectangular'){
-                        <app-info-item [label]="'Raio da Abertura'" [value]="simulation.context.aperture.radius + 'cm'"></app-info-item>
+                    @if(apertureType !== 'rectangular'){
+                        <app-info-item [label]="'Raio da Abertura'" [value]="apertureRadius + 'cm'"></app-info-item>
                     }
                 </div>
                 <div class="col">
                     <div class="section">
                         <h3>Informações da Fonte</h3>
                     </div>
-                    <app-info-item [label]="'Tipo de Fonte'" [value]="translationService.translateSourceType(simulation.context.source.type)"></app-info-item>
+                    <app-info-item [label]="'Tipo de Fonte'" [value]="translationService.translateSourceType(sourceType)"></app-info-item>
                     <app-info-item [label]="'Posição da fonte no eixo vertical (z)'" [value]="simulation.sourceHeight + 'cm'"></app-info-item>
 
-                    @if(simulation.context.source.type === 'cuboid'){
-                        <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
-                        <app-info-item [label]="'Largura da Fonte'" [value]="simulation.context.source.width + 'cm'"></app-info-item>
-                        <app-info-item [label]="'Profundidade da Fonte'" [value]="simulation.context.source.depth + 'cm'"></app-info-item>
+                    @if(sourceType === 'cuboid'){
+                        <app-info-item [label]="'Altura da Fonte'" [value]="sourceHeightValue + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Largura da Fonte'" [value]="sourceWidthValue + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Profundidade da Fonte'" [value]="sourceDepthValue + 'cm'"></app-info-item>
                     }
 
-                    @if(simulation.context.source.type === 'cylindrical'){
-                        <app-info-item [label]="'Altura da Fonte'" [value]="simulation.context.source.height + 'cm'"></app-info-item>
-                        <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
+                    @if(sourceType === 'cylindrical'){
+                        <app-info-item [label]="'Altura da Fonte'" [value]="sourceHeightValue + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Raio da Fonte'" [value]="sourceRadiusValue + 'cm'"></app-info-item>
                     }
 
-                    @if(simulation.context.source.type === 'spherical'){
-                        <app-info-item [label]="'Raio da Fonte'" [value]="simulation.context.source.radius + 'cm'"></app-info-item>
+                    @if(sourceType === 'spherical'){
+                        <app-info-item [label]="'Raio da Fonte'" [value]="sourceRadiusValue + 'cm'"></app-info-item>
+                    }
+
+                    @if(sourceType === 'point'){
+                        <app-info-item [label]="'Coordenada X'" [value]="(pointCenterX ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Coordenada Y'" [value]="(pointCenterY ?? 0) + 'cm'"></app-info-item>
+                        <app-info-item [label]="'Coordenada Z'" [value]="(pointCenterZ ?? 0) + 'cm'"></app-info-item>
                     }
                 </div>
             </div>

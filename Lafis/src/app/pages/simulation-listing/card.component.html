@@ -14,12 +14,12 @@
             <div class="info">
                 <app-info-item
                     [label]="'Tipo de Abertura:'"
-                    [value]="translationService.translateApertureType(simulation.context.aperture.type)">
+                    [value]="translationService.translateApertureType(getApertureType(simulation))">
                 </app-info-item>
     
                 <app-info-item
                     [label]="'Tipo de Fonte:'"
-                    [value]="translationService.translateSourceType(simulation.context.source.type)">
+                    [value]="translationService.translateSourceType(getSourceType(simulation))">
                 </app-info-item>
     
                 <app-info-item

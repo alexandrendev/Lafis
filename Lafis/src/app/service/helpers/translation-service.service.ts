@@ -24,27 +24,33 @@ export class TranslationServiceService {
   }
 
 
-  translateSourceType(sourceType: string): string {
-    switch (sourceType) {
+  translateSourceType(sourceType: string | undefined | null): string {
+    const normalizedType = (sourceType || '').toLowerCase();
+
+    switch (normalizedType) {
       case 'spherical':
         return 'Esférica';
-      case 'prismatica':
+      case 'cuboid':
         return 'Prisma Retângular';
       case 'cylindrical':
         return 'Cilíndrica';
+      case 'point':
+        return 'Pontual';
       default:
-        return sourceType;
+        return sourceType || '-';
     }
   }
 
-  translateApertureType(apertureType: string): string {
-    switch (apertureType) {
+  translateApertureType(apertureType: string | undefined | null): string {
+    const normalizedType = (apertureType || '').toLowerCase();
+
+    switch (normalizedType) {
       case 'circular':
         return 'circular';
       case 'rectangular':
         return 'retangular';
       default:
-        return apertureType;
+        return apertureType || '-';
     }
   }
 }
