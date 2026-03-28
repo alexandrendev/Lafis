@@ -4,6 +4,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { Chart } from 'chart.js/dist';
 import { BaseChartDirective } from 'ng2-charts';
 import { InfoItemComponent } from '../../components/info-item/info-item.component';
+import { Simulation } from '../../entity/Simulation';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { InfoItemComponent } from '../../components/info-item/info-item.componen
   styleUrl: './simulacao-detail-modal.component.scss'
 })
 export class SimulacaoDetailModalComponent {
-  @Input() selectedSimulation: any;
+  @Input() selectedSimulation?: Simulation;
   @Input() isOpen: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 
@@ -63,12 +64,16 @@ export class SimulacaoDetailModalComponent {
 
 
   updateInformation() {
+    if (!this.selectedSimulation) {
+      return;
+    }
+
     this.escaped = this.selectedSimulation.escaped;
     this.emited = this.selectedSimulation.emissions - this.selectedSimulation.escaped;
 
     this.chartData.datasets[0].data = [this.escaped, this.emited];
     // this.pieChartData.datasets[0].data = [this.escaped, this.emited];
-    this.solidAngle = (4* Math.PI * this.selectedSimulation.escaped) / this.selectedSimulation.emissions;
+    this.solidAngle = this.selectedSimulation.solidAngle ?? 0;
     this.escapedPercentual = (this.selectedSimulation.escaped / this.selectedSimulation.emissions) * 100;
   }
 

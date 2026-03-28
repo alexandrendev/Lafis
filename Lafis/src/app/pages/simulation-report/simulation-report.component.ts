@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartProviderService } from '../../service/chart/chart-provider.service';
-import { MathService } from '../../service/math/math.service';
 import { TranslationServiceService } from '../../service/helpers/translation-service.service';
 
 @Component({
@@ -28,7 +27,6 @@ export class SimulationReportComponent implements OnInit{
   emissionsPerSecond!: number;
 
   private readonly api = inject(ApiService);
-  private readonly _math = inject(MathService);
 
   constructor(
     private route: ActivatedRoute,
@@ -122,8 +120,8 @@ export class SimulationReportComponent implements OnInit{
     this.chartData = { ...this.chart.chartData };
     this.pieChartData = { ...this.chart.pieChartData };
 
-    this.solidAngle = this.simulation.escaped / this.simulation.emissions;
-    this.error = this._math.getSolidAngleDeviation(this.solidAngle, this.simulation.emissions);
+    this.solidAngle = this.simulation.solidAngle ?? 0;
+    this.error = this.simulation.solidAngleError ?? 0;
     this.escapedPercent = (this.simulation.escaped / this.simulation.emissions) * 100;
 
     const seconds = this.extractTotalSeconds(this.simulation.duration);

@@ -26,6 +26,8 @@ export interface Simulation {
     duration: string;
     sourceHeight: number;
     escaped: number;
+    solidAngle?: number;
+    solidAngleError?: number;
     status: string;
     created: any;
   }
