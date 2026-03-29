@@ -3,7 +3,7 @@ import { FormGroup, FormsModule, Validators, FormControl, ReactiveFormsModule } 
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { ThreeServiceService } from '../../service/three-service.service';
+import { PreviewSchema, ThreeServiceService } from '../../service/three-service.service';
 import { ApiService } from '../../service/api/api.service';
 import { NotificationService } from '../../service/notification.service';
 import { Router } from '@angular/router';
@@ -313,7 +313,6 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
 
 
   updateScene(): void {
-    this.previewGroup.clear();
     let { apertureType, sourceType, apertureZAxisHeight, apertureHeight, apertureWidth, apertureRadius,
       prismHeight, prismWidth, prismDepth, sphereRadius, cylinderHeight, cylinderRadius,
       sourceCenterX, sourceCenterY, sourceCenterZ } = this.form.value;
@@ -332,32 +331,22 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
     sourceCenterY = this.toNumber(sourceCenterY);
     sourceCenterZ = this.toNumber(sourceCenterZ);
 
-    if (apertureType === 'rectangular') {
-      const prism = this.service.generatePrism(apertureZAxisHeight, apertureHeight, apertureWidth, true);
-      this.previewGroup.add(prism);
-    } else if (apertureType === 'circular') {
-      const cylinder = this.service.generateCylinder(apertureZAxisHeight, apertureRadius, true);
-      this.previewGroup.add(cylinder);
-    }
-
-
-    if (sourceType === 'prismatica') {
-      const prism = this.service.generatePrism(prismHeight, prismWidth, prismDepth, false);
-      prism.position.set(sourceCenterX, sourceCenterZ + prismHeight / 2, sourceCenterY);
-      this.previewGroup.add(prism);
-    } else if (sourceType === 'esferica') {
-      const sphere = this.service.generateSphere(sphereRadius);
-      sphere.position.set(sourceCenterX, sourceCenterZ, sourceCenterY);
-      this.previewGroup.add(sphere);
-    } else if (sourceType === 'cilindrica') {
-      const cylinder = this.service.generateCylinder(cylinderHeight, cylinderRadius, false);
-      cylinder.position.set(sourceCenterX, sourceCenterZ + cylinderHeight / 2, sourceCenterY);
-      this.previewGroup.add(cylinder);
-    } else if (sourceType === 'pontual') {
-      const point = this.service.generateSphere(0.5);
-      point.position.set(sourceCenterX, sourceCenterZ, sourceCenterY);
-      this.previewGroup.add(point);
-    }
+    const schema: PreviewSchema = {
+      apertureType,
+      sourceType,
+      apertureHeight: apertureZAxisHeight,
+      apertureWidth: apertureHeight,
+      apertureDepth: apertureWidth,
+      apertureRadius,
+      sourceHeight: sourceType === 'cilindrica' ? cylinderHeight : prismHeight,
+      sourceWidth: prismWidth,
+      sourceDepth: prismDepth,
+      sourceRadius: sourceType === 'cilindrica' ? cylinderRadius : sphereRadius,
+      sourceCenterX,
+      sourceCenterY,
+      sourceCenterZ
+    };
+    this.service.renderPreviewFromSchema(this.previewGroup, schema);
 
     if (!this.isUserInteracting) {
       this.fitCameraToPreview();

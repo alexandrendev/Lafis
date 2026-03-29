@@ -28,6 +28,8 @@ export interface Simulation {
     escaped: number;
     solidAngle?: number;
     solidAngleError?: number;
+    apertureType?: string;
+    sourceType?: string;
     status: string;
     created: any;
   }

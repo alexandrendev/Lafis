@@ -1,42 +1,78 @@
 <div *ngIf="simulation">
-    <div class="center">
-        <div class="report">
-            <div class="header">
-                <img src="/assets/logoLafis.png" alt="">
-                <h1>Relatório da Simulação</h1>
-                <!-- <p>Gerado Automaticamente</p> -->
+    <div class="report-wrapper">
+        <div class="report-dashboard">
+            <div class="report-header">
+                <div class="header-title">
+                    <img src="/assets/logoLafis.png" alt="">
+                    <div>
+                        <h1>Relatório da Simulação</h1>
+                        <p>ID: {{ simulation.id }}</p>
+                    </div>
+                </div>
                 <button (click)="printReport()">Imprimir Relatório</button>
             </div>
-            
-            <div class="content">
-                <div class="col">
-                    <div class="section">
-                        <h3>Informações Gerais</h3>
-                    </div>
-                    <app-info-item [label]="'ID'" [value]="simulation.id"></app-info-item>
-                    <app-info-item [label]="'Emissões'" [value]="simulation.emissions | number"></app-info-item>
-                    <app-info-item [label]="'Vazão'" [value]="(simulation.escaped | number) + ' (' + (escapedPercent | number:'1.1-1') + '%)'"></app-info-item>
-                    <app-info-item [label]="'Status'" [value]="translationService.translateStatus(simulation.status)"></app-info-item>
-                    <app-info-item [label]="'Criada em'" [value]="simulation.created | date:'dd MMM yyyy - HH:mm'"></app-info-item>
-                    <app-info-item [label]="'Tempo de simulação'" [value]="simulation.duration"></app-info-item>
-                    <app-info-item [label]="'Emissões por segundo'" [value]="emissionsPerSecond | number:'1.1-1'"></app-info-item>
+
+            <div class="kpi-grid">
+                <div class="kpi-card kpi-main">
+                    <span class="kpi-label">Ângulo sólido</span>
+                    <strong>{{ solidAngle | number:'1.5-5' }}</strong>
+                    <small>sr</small>
                 </div>
-
-                <div class="col">
-                    <div class="section">
-                        <h3>Relação Emissões x Vazão</h3>
-                    </div>
-                    <div class="chart-container">
-                        <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'pie'"></canvas>
-                    </div>
-
-                    <app-info-item [label]="'Ângulo sólido calculado'" [value]="(solidAngle | number:'1.5-5') + ' ± ' + (error | number:'1.5-5')"></app-info-item>
+                <div class="kpi-card">
+                    <span class="kpi-label">Erro (95%)</span>
+                    <strong>{{ error | number:'1.5-5' }}</strong>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Tempo da simulação</span>
+                    <strong>{{ simulationDuration }}</strong>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Taxa de emissões</span>
+                    <strong>{{ emissionsPerSecond | number:'1.1-1' }}</strong>
+                    <small>emissões/s</small>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Vazão</span>
+                    <strong>{{ escapedPercent | number:'1.1-1' }}%</strong>
+                    <small>{{ simulation.escaped | number }} / {{ simulation.emissions | number }}</small>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Status</span>
+                    <strong>{{ translationService.translateStatus(simulation.status) }}</strong>
                 </div>
             </div>
 
-            <div class="content">
-                <div class="col">
-                    <div class="section">
+            <div class="dashboard-content">
+                <div class="panel panel-chart">
+                    <div class="panel-header">
+                        <h3>Relação Emissões x Vazão</h3>
+                    </div>
+                    <div class="chart-container chart-container-small">
+                        <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'pie'"></canvas>
+                    </div>
+                </div>
+
+                <div class="panel panel-visual">
+                    <div class="panel-header">
+                        <h3>Visualização 3D da Geometria</h3>
+                        <button class="secondary-btn" type="button" (click)="resetCameraView()">Recentralizar câmera</button>
+                    </div>
+                    <p class="panel-hint">Use o mouse para girar, mover e aproximar.</p>
+                    <div class="threejs-container"></div>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Informações Gerais</h3>
+                    </div>
+                    <app-info-item [label]="'Emissões'" [value]="simulation.emissions | number"></app-info-item>
+                    <app-info-item [label]="'Criada em'" [value]="simulation.created | date:'dd MMM yyyy - HH:mm'"></app-info-item>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
                         <h3>Informações da Abertura</h3>
                     </div>
                     <app-info-item [label]="'Tipo de Abertura'" [value]="translationService.translateApertureType(apertureType)"></app-info-item>
@@ -51,8 +87,9 @@
                         <app-info-item [label]="'Raio da Abertura'" [value]="apertureRadius + 'cm'"></app-info-item>
                     }
                 </div>
-                <div class="col">
-                    <div class="section">
+
+                <div class="panel">
+                    <div class="panel-header">
                         <h3>Informações da Fonte</h3>
                     </div>
                     <app-info-item [label]="'Tipo de Fonte'" [value]="translationService.translateSourceType(sourceType)"></app-info-item>
@@ -89,12 +126,6 @@
                     }
                 </div>
             </div>
-
-            <div class="content-view">
-
-            </div>
-
-            <div class="footer"></div>
         </div>
     </div>
 </div>
