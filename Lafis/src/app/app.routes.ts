@@ -10,6 +10,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { AccountComponent } from './pages/account/account.component';
 import { HelpComponent } from './pages/help/help.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { SimulationComparisonComponent } from './pages/simulation-comparison/simulation-comparison.component';
 
 export const routes: Routes = [
     {path: '', pathMatch: 'full' ,redirectTo: 'login'},
@@ -19,6 +20,7 @@ export const routes: Routes = [
     {path: 'all', component: CardComponent, canActivate: [authGuard]},
     {path: 'home', component: HomeComponent, canActivate: [authGuard]},
     {path: 'report/:id', component: SimulationReportComponent, canActivate: [authGuard]},
+    {path: 'compare', component: SimulationComparisonComponent, canActivate: [authGuard]},
     {path: 'account', component: AccountComponent, canActivate: [authGuard]},
     {path: 'help', component: HelpComponent, canActivate: [authGuard]},
     {path: 'password-reset', component: ForgotPasswordComponent}

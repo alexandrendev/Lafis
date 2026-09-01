@@ -1,0 +1,103 @@
+<main class="comparison-page">
+  <header class="comparison-header">
+    <div>
+      <a routerLink="/all" class="back-link">← Minhas simulações</a>
+      <h1>Comparação de simulações</h1>
+      <p>{{ simulations.length ? simulations.length + ' simulações concluídas selecionadas.' : 'Compare os resultados concluídos lado a lado.' }}</p>
+    </div>
+    @if (simulations.length >= 2) {
+      <button type="button" class="export-button" (click)="printComparison()">Exportar PDF</button>
+    }
+  </header>
+
+  @if (simulations.length >= 2) {
+    <section class="simulation-overview" aria-label="Simulações selecionadas">
+      @for (simulation of simulations; track simulation.id; let index = $index) {
+        <article class="simulation-identity" [style.--simulation-color]="colorFor(index)">
+          <div class="identity-header"><span class="color-dot"></span><span class="simulation-code">S{{ index + 1 }}</span><strong>{{ displayName(simulation, index) }}</strong><span>{{ simulation.created | date:'dd MMM yyyy, HH:mm' }}</span></div>
+          <div class="identity-section"><span>Abertura</span><strong>{{ translationService.translateApertureType(apertureType(simulation)) }}</strong><small>{{ apertureSummary(simulation) }}</small></div>
+          <div class="identity-section"><span>Fonte</span><strong>{{ translationService.translateSourceType(sourceType(simulation)) }}</strong><small>{{ sourceSummary(simulation) }}</small></div>
+        </article>
+      }
+    </section>
+
+    <section class="comparison-summary" aria-label="Resumo analítico da comparação">
+      <div class="summary-heading"><span>Leitura rápida</span><p>O que muda entre os resultados e entre as configurações selecionadas.</p></div>
+      <div class="summary-grid">
+        <article>
+          <span>Amplitude do resultado</span>
+          <strong>{{ solidAngleDifference() | number:'1.3-5' }} sr</strong>
+          <small>
+            Entre {{ displayName(comparisonExtremes().lower, comparisonExtremes().lowerIndex) }} e {{ displayName(comparisonExtremes().higher, comparisonExtremes().higherIndex) }}
+            @if (relativeSolidAngleDifference() !== null) { · {{ relativeSolidAngleDifference() | number:'1.1-2' }}% }
+          </small>
+        </article>
+        <article>
+          <span>Leitura estatística</span>
+          <strong [class.stat-compatible]="extremesOverlapAt95Percent()" [class.stat-distinct]="!extremesOverlapAt95Percent()">{{ extremesOverlapAt95Percent() ? 'Compatíveis no IC 95%' : 'Extremos distintos no IC 95%' }}</strong>
+          <small>ΔΩ {{ solidAngleDifference() | number:'1.3-5' }} sr · margem combinada ± {{ combinedConfidenceMargin() | number:'1.3-5' }} sr</small>
+        </article>
+        <article>
+          <span>Variáveis alteradas</span>
+          <strong>{{ configurationChanges.length ? configurationChanges.length + (configurationChanges.length === 1 ? ' parâmetro' : ' parâmetros') : 'Nenhuma' }}</strong>
+          <small>{{ configurationChanges.length ? configurationChanges.join(' · ') : 'Abertura e fonte são equivalentes.' }}</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="charts-grid">
+      <article class="panel"><h2>Ângulo sólido</h2><canvas baseChart [data]="solidAngleChartData" [options]="chartOptions" [type]="barChartType"></canvas></article>
+      <article class="panel"><h2>Vazão</h2><canvas baseChart [data]="efficiencyChartData" [options]="chartOptions" [type]="barChartType"></canvas></article>
+    </section>
+
+    <section class="panel table-panel">
+      <h2>Resultados comparativos</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Simulação</th><th>Data</th><th>Abertura</th><th>Fonte</th><th>Emissões</th><th>Ângulo sólido</th><th>Em π</th><th>Erro (95%)</th><th>Vazão</th></tr></thead>
+          <tbody>
+            @for (simulation of simulations; track simulation.id; let index = $index) {
+              <tr><td><strong>{{ displayName(simulation, index) }}</strong></td><td>{{ simulation.created | date:'dd/MM/yy HH:mm' }}</td><td>{{ translationService.translateApertureType(apertureType(simulation)) }}</td><td>{{ translationService.translateSourceType(sourceType(simulation)) }}</td><td>{{ simulation.emissions | number }}</td><td>{{ solidAngle(simulation) | number:'1.3-5' }} sr</td><td>≈ {{ solidAngleInPi(simulation) | number:'1.2-2' }}π</td><td>± {{ (simulation.solidAngleError ?? 0) | number:'1.3-5' }}</td><td>{{ efficiency(simulation) | number:'1.1-2' }}%</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel configuration-panel">
+      <div class="panel-title-row">
+        <div><h2>Matriz completa de configurações</h2><p>Os parâmetros que diferem entre as simulações ficam em destaque.</p></div>
+        <button type="button" class="toggle-equal" (click)="showEqualParameters = !showEqualParameters">{{ showEqualParameters ? 'Ocultar parâmetros iguais' : 'Mostrar parâmetros iguais' }}</button>
+      </div>
+      <div class="table-scroll">
+        <table class="configuration-table">
+          <thead>
+            <tr>
+              <th>Parâmetro</th>
+              @for (simulation of simulations; track simulation.id; let index = $index) {
+                <th class="simulation-column-header" [style.--simulation-color]="colorFor(index)">
+                  <strong><span class="color-dot"></span>{{ displayName(simulation, index) }}</strong>
+                  <small>{{ simulation.created | date:'dd/MM/yy HH:mm' }}</small>
+                  <span>{{ translationService.translateApertureType(apertureType(simulation)) }} · {{ translationService.translateSourceType(sourceType(simulation)) }}</span>
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (group of configurationGroups; track group.title) {
+              @if (visibleRows(group).length) {
+                <tr class="configuration-group"><th [attr.colspan]="simulations.length + 1">{{ group.title }}</th></tr>
+                @for (row of visibleRows(group); track row.label) {
+                  <tr [class.differs]="row.differs"><th>{{ row.label }}</th>@for (value of row.values; track $index) {<td>{{ value }}</td>}</tr>
+                }
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (!showEqualParameters) { <p class="matrix-hint">Mostrando apenas parâmetros diferentes. Use o botão acima para ver a configuração completa.</p> }
+    </section>
+  } @else {
+    <section class="empty-state"><h1>Selecione ao menos duas simulações concluídas</h1><p>Volte para a listagem, ative o modo de comparação e escolha os resultados que deseja analisar.</p><a routerLink="/all">Voltar para a listagem</a></section>
+  }
+</main>

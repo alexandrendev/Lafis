@@ -1,100 +1,45 @@
-<div class="welcome-container">
-    <!-- <div class="title-bar">
-        <h2>Bem vindo!</h2>
-    </div> -->
+<main class="home-page">
+  <header class="home-header">
+    <div><p class="eyebrow">e-Mission</p><h1>Seu espaço de simulação</h1><p>Configure geometrias, acompanhe execuções e confronte os resultados com clareza.</p></div>
+    <a routerLink="/new" class="primary-action">Nova simulação</a>
+  </header>
 
-    <div class="content">
-        <div class="welcome-content">
-            <h2 class="welcome-title">Bem-vindo(a)!</h2>
-            
-            @if(simulations.length == 0){
-                <p class="welcome-description">
-                    O e-Mission é uma ferramenta de simulação avançada que permite a modelagem de geometrias personalizáveis de fontes isotrópicas e poços.
-                    Com uma interface intuitiva, você pode criar suas simulações e acompanhar a visualização em 3D, executar e obter relatórios detalhados, facilitando a análise e otimização de seus experimentos.
-                </p>
-    
-                <p class="cta-text">Simule, analise e otimize seus experimentos com tecnologia intuitiva e poderosa.</p>
-                
-
-                <ul class="video-list">
-                    <app-video-item [title]="'Criando uma simulação'" [source]="'/assets/create.mp4'"></app-video-item>
-                    <app-video-item [title]="'Visualização e execução'" [source]="'/assets/create.mp4'"></app-video-item>
-                    <app-video-item [title]="'Relatórios'" [source]="'/assets/reportview.mp4'"></app-video-item>
-                </ul>
-                  
-                <br>
-                <br>
-                <div class="cta-button">
-                  <a href="/new" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i>
-                    Cria agora mesmo sua primeira simulação!
-                  </a>
-                </div>
-            }
-            
-            @if(simulations.length > 0){
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-value">{{simulations.length}}</div>
-                        <div class="metric-label">Simulações Criadas</div>
-                        <i class="fas fa-sync-alt metric-icon"></i>
-                    </div>
-                    
-                    <div class="metric-card">
-                        <div class="metric-value">{{finishedSimulations}}</div>
-                        <div class="metric-label">Simulações Concluídas</div>
-                        <i class="fas fa-check-circle metric-icon"></i>
-                    </div>                
-                </div>
-                
-    
-                <div class="recent-simulations">
-                    <h3 class="section-title">
-                        <i class="fas fa-history"></i> Suas Últimas Simulações:
-                    </h3>
-                
-                    @for(simulation of simulations.slice(0, 3); track simulation.id){
-                        <div class="simulation-list">
-                            <div class="simulation-card">
-                                <div class="simulation-header">
-                                    <span class="simulation-name"> {{simulation.id}} </span>
-                                    @if(simulation.status === 'FINISHED'){
-                                        <span class="simulation-status completed">Concluída</span>
-                                    }
-                                    @if(simulation.status === 'CREATED'){
-                                        <span class="simulation-status created">Criada</span>
-                                    }
-                                    @if(simulation.status === 'RUNNING'){
-                                        <span class="simulation-status created">Em execução</span>
-                                    }
-                                    
-                                </div>
-                                <div class="simulation-details">
-                                    <span><i class="fas fa-shapes"></i> Fonte: {{simulation.context?.source?.type || '-'}}</span>
-                                    <span><i class="fas fa-crop"></i> Abertura: {{simulation.context?.aperture?.type || '-'}}</span>
-                                    <span><i class="fas fa-clock"></i> Criada em: {{simulation.created | date:'dd/MM/yyyy - HH:mm'}} </span>
-                                </div>
-                            </div>    
-                    </div>
-                    }
-
-                    <footer class="footer">
-                        <p>Desenvolvido por Alexendre N. de Freitas e mantido no <strong>Laboratório de Física</strong> do <strong>Instituto Federal Goiano, Campus Ceres</strong>.</p>
-                        <p>Conecte-se conosco:</p>
-                        <div class="social-links">
-                            <a href="https://www.instagram.com/ifgoiano" target="_blank" class="social-icon">
-                                <i class="fab fa-instagram"></i>
-                                Instagram
-                            </a>
-                        </div>
-                        <p>email: lafis.ce&#64;ifgoiano.edu.br</p>
-                    </footer>
-
-                </div>    
-            }
-
-
-                    
+  @if (isLoading) {
+    <section class="loading-state">Carregando seu espaço de trabalho…</section>
+  } @else {
+    @if (!simulations.length) {
+      <section class="empty-workspace"><span class="section-kicker">Primeiro passo</span><h2>Crie sua primeira geometria</h2><p>Defina a abertura e a fonte, confira a prévia 3D e execute quando estiver pronto.</p><a routerLink="/new" class="primary-action">Configurar simulação</a></section>
+    } @else {
+      <section class="next-step" aria-labelledby="next-step-title">
+        <div>
+          <span class="section-kicker">Próxima ação</span>
+          @if (runningSimulations.length) {
+            <h2 id="next-step-title">Você tem {{ runningSimulations.length }} simulação{{ runningSimulations.length > 1 ? 'ões' : '' }} em execução</h2><p>Os resultados aparecerão ao fim do processamento. Consulte os detalhes ou continue configurando outro cenário.</p><a [routerLink]="['/report', runningSimulations[0].id]" class="secondary-action">Ver execução</a>
+          } @else if (comparisonCandidates.length >= 2) {
+            <h2 id="next-step-title">Há resultados prontos para comparar</h2><p>Compare as duas simulações mais recentes e veja o que mudou na configuração e no resultado.</p><a routerLink="/compare" [queryParams]="{ ids: comparisonIds }" class="secondary-action">Comparar resultados</a>
+          } @else {
+            <h2 id="next-step-title">Seu último resultado já está disponível</h2><p>Revise o relatório ou crie uma variação controlada para investigar um novo parâmetro.</p><a [routerLink]="['/report', recentSimulations[0].id]" class="secondary-action">Ver último relatório</a>
+          }
         </div>
-    </div>
-</div>
+        <a routerLink="/all" class="subtle-link">Ver todas as simulações →</a>
+      </section>
+
+      <section class="workspace-grid">
+        <section class="recent-panel" aria-labelledby="recent-title">
+          <div class="section-heading"><div><span class="section-kicker">Atividade recente</span><h2 id="recent-title">Continue de onde parou</h2></div><a routerLink="/all">Ver todas</a></div>
+          <div class="recent-list">
+            @for (simulation of recentSimulations; track simulation.id) {
+              <a [routerLink]="['/report', simulation.id]" class="simulation-row">
+                <div class="row-main"><strong>{{ displayName(simulation) }}</strong><span>{{ simulation.created | date:'dd MMM yyyy, HH:mm' }}</span></div>
+                <div class="row-meta"><span>{{ translationService.translateApertureType(apertureType(simulation)) }}</span><span>{{ translationService.translateSourceType(sourceType(simulation)) }}</span></div>
+                <span class="status-pill" [class.running]="simulation.status === 'RUNNING'" [class.finished]="simulation.status === 'FINISHED'">{{ translationService.translateStatus(simulation.status) }}</span>
+              </a>
+            }
+          </div>
+        </section>
+
+        <aside class="validation-panel" aria-labelledby="validation-title"><span class="section-kicker">Validação</span><h2 id="validation-title">Teste uma hipótese conhecida</h2><p>Use cenários controlados para verificar se a resposta geométrica segue o esperado antes de explorar casos mais complexos.</p><a routerLink="/help" fragment="validacao">Ver cenários de validação →</a></aside>
+      </section>
+    }
+  }
+</main>

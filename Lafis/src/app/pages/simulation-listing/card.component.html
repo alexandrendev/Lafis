@@ -1,59 +1,77 @@
 <div class="options-bar">
     <div class="title-container">
-        <h2>Listagem de Simulações</h2>
+        <div>
+            <h2>Listagem de Simulações</h2>
+            <p>{{ isComparisonMode ? 'Selecione de 2 a 6 simulações concluídas para comparar.' : 'Selecione uma simulação para consultar a configuração e os resultados.' }}</p>
+        </div>
+        <div class="listing-actions">
+            @if (isComparisonMode) {
+                <span class="selection-count">{{ selectedSimulationIds.size }} selecionada(s)</span>
+                <button type="button" class="secondary-listing-action" (click)="toggleComparisonMode()">Cancelar</button>
+                <button type="button" class="primary-listing-action" [disabled]="selectedSimulationIds.size < 2" (click)="compareSelected()">Comparar</button>
+            } @else {
+                <button type="button" class="secondary-listing-action" (click)="toggleComparisonMode()">Comparar simulações</button>
+            }
+        </div>
     </div>
 </div>
 
 @if (simulations.length > 0) {
+    <section class="simulation-list" aria-label="Suas simulações">
     @for (simulation of simulations; track simulation.id) {
-        <div class="card-container">
-            <div class="card-header">
-                <h2>{{ simulation.created | date: 'medium' }}</h2>
-            </div>
-        
-            <div class="info">
-                <app-info-item
-                    [label]="'Tipo de Abertura:'"
-                    [value]="translationService.translateApertureType(getApertureType(simulation))">
-                </app-info-item>
-    
-                <app-info-item
-                    [label]="'Tipo de Fonte:'"
-                    [value]="translationService.translateSourceType(getSourceType(simulation))">
-                </app-info-item>
-    
-                <app-info-item
-                    [label]="'Quantidade de emissões:'"
-                    [value]="simulation.emissions | number">
-                </app-info-item>
-    
-                <app-info-item
-                    [label]="'Status:'"
-                    [value]="translationService.translateStatus(simulation.status)">
-                </app-info-item>
-            </div>
-        
-            <div class="card-footer">
-                <div class="button information">
-                    <a (click)="openReport(simulation.id)">
-                        <img src="/assets/info-white.svg" alt="Info">
-                        <p>Visualizar Relatório</p>
-                    </a>
+        <article class="card-container" role="link" tabindex="0"
+            [class.selection-mode]="isComparisonMode"
+            [class.selected]="isSelected(simulation.id)"
+            [class.not-comparable]="isComparisonMode && !isComparable(simulation)"
+            [attr.aria-label]="'Abrir relatório da simulação criada em ' + (simulation.created | date: 'short')"
+            (click)="openReport(simulation.id)" (keydown)="onCardKeydown($event, simulation.id)">
+            <div class="card-main">
+                <div class="card-header">
+                    <span class="eyebrow">Simulação</span>
+                    <h2>{{ simulation.name || (simulation.created | date: 'dd MMM yyyy, HH:mm') }}</h2>
+                    @if (simulation.name) { <small>{{ simulation.created | date: 'dd MMM yyyy, HH:mm' }}</small> }
                 </div>
-    
+                <div class="simulation-metadata">
+                    <div class="metadata-item">
+                        <span>Abertura</span>
+                        <strong>{{ translationService.translateApertureType(getApertureType(simulation)) }}</strong>
+                    </div>
+                    <div class="metadata-item">
+                        <span>Fonte</span>
+                        <strong>{{ translationService.translateSourceType(getSourceType(simulation)) }}</strong>
+                    </div>
+                    <div class="metadata-item">
+                        <span>Emissões</span>
+                        <strong>{{ simulation.emissions | number }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                @if (isComparisonMode) {
+                    <label class="comparison-select" (click)="$event.stopPropagation()">
+                        <input type="checkbox" [checked]="isSelected(simulation.id)" [disabled]="!isComparable(simulation)" (change)="toggleSelection(simulation.id)">
+                        <span>{{ isComparable(simulation) ? 'Selecionar' : 'Sem resultado' }}</span>
+                    </label>
+                }
+                <span [class]="'status-badge ' + getStatusClass(simulation.status)">
+                    {{ translationService.translateStatus(simulation.status) }}
+                </span>
                 @if (simulation.status === 'CREATED') {
-                    <div class="button confirm">
-                        <a (click)="!isLoading[simulation.id] && startSimulation(simulation.id)"
+                    <div class="button confirm" (click)="$event.stopPropagation()">
+                        <button type="button" (click)="startSimulation($event, simulation.id)"
                            [class.loading]="isLoading[simulation.id]"
-                           [class.disabled]="isLoading[simulation.id]">
+                           [disabled]="isLoading[simulation.id]">
                             <img src="/assets/play-icon.svg" alt="Play">
                             <p>{{ isLoading[simulation.id] ? 'Executando...' : 'Iniciar Simulação' }}</p>
-                        </a>
+                        </button>
                     </div>
                 }
+                <span class="open-indicator" aria-hidden="true">→</span>
             </div>
-        </div>
+        </article>
     }
+    </section>
 } @else {
     <div class="empty-simulation-card">
         <div class="empty-card-content">

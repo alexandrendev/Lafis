@@ -1,25 +1,17 @@
-<div class="center">
-    <p class="welcome-description">
-        O e-Mission é uma ferramenta de simulação avançada que permite a modelagem de geometrias personalizáveis de fontes isotrópicas e poços.
-        Com uma interface intuitiva, você pode criar suas simulações e acompanhar a visualização em 3D, executar e obter relatórios detalhados, facilitando a análise e otimização de seus experimentos.
-    </p>
-    
-    <p class="cta-text">Simule, analise e otimize seus experimentos com tecnologia intuitiva e poderosa.</p>
-    
-    
-    <h2>Começando a simular:</h2>
-    <ul class="video-list">
-        <app-video-item [title]="'Criando uma simulação'" [source]="'/assets/create.mp4'"></app-video-item>
-        <app-video-item [title]="'Visualização e execução'" [source]="'/assets/create.mp4'"></app-video-item>
-        <app-video-item [title]="'Relatórios'" [source]="'/assets/reportview.mp4'"></app-video-item>
-    </ul>
-      
-    <br>
-    <br>
-    <div class="cta-button">
-      <a href="/new" class="btn btn-primary">
-        <i class="fas fa-rocket"></i>
-        Cria agora mesmo sua primeira simulação!
-      </a>
+<main class="help-page">
+  <header class="help-header"><p class="eyebrow">Base de conhecimento</p><h1>Como interpretar uma simulação</h1><p>Um guia prático para configurar cenários, ler os resultados e reconhecer os limites do modelo geométrico.</p></header>
+  <section class="help-grid">
+    <article><span class="number">01</span><h2>Configure uma hipótese</h2><p>Altere poucos parâmetros por vez. Nomeie a simulação de forma descritiva e use a prévia 3D para confirmar posição, abertura e dimensões antes de executar.</p><a routerLink="/new">Criar simulação →</a></article>
+    <article><span class="number">02</span><h2>Leia o resultado</h2><p>O ângulo sólido é calculado a partir da fração de emissões que atravessa a abertura: <strong>Ω = 4π · N<sub>escape</sub> / N<sub>emissões</sub></strong>. Veja também a incerteza de 95%.</p></article>
+    <article><span class="number">03</span><h2>Compare de forma controlada</h2><p>Selecione resultados concluídos e use a comparação para enxergar a amplitude da diferença, a compatibilidade estatística e quais parâmetros mudaram.</p><a routerLink="/all">Comparar simulações →</a></article>
+  </section>
+  <section id="validacao" class="knowledge-panel">
+    <div><p class="eyebrow">Cenários de validação</p><h2>Comece por algo que você já sabe responder</h2><p>Esses testes tornam mais fácil separar uma descoberta física de um erro de configuração.</p></div>
+    <div class="validation-list">
+      <article><h3>Fonte pontual e abertura circular</h3><p>Para uma fonte pontual central, compare o Monte Carlo com a expressão analítica da abertura circular. É o melhor teste para validar a geometria básica.</p></article>
+      <article><h3>Fonte pontual × esfera mínima</h3><p>Com raio muito pequeno, a fonte esférica deve convergir para o resultado da fonte pontual dentro da incerteza estatística.</p></article>
+      <article><h3>Variação de altura</h3><p>Mantenha a fonte e o raio constantes e altere apenas a altura da abertura ou a posição da fonte. O efeito no ângulo sólido deve ser monotônico.</p></article>
     </div>
-</div>
+  </section>
+  <section class="knowledge-panel limits-panel"><p class="eyebrow">Limites do modelo</p><h2>O que o e-Mission mede hoje</h2><p>O sistema simula a aceitação geométrica de emissões isotrópicas pela abertura. Ele não modela, por enquanto, materiais, espectros de radionuclídeos, transporte de partículas, deposição de energia ou corrente de ionização. Use-o para investigar geometria e validar tendências, não para reproduzir diretamente uma medida dosimétrica.</p></section>
+</main>

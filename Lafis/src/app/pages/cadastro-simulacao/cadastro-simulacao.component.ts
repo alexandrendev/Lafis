@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ElementRef, HostListener, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
-import { FormGroup, FormsModule, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, FormsModule, Validators, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -7,6 +7,23 @@ import { PreviewSchema, ThreeServiceService } from '../../service/three-service.
 import { ApiService } from '../../service/api/api.service';
 import { NotificationService } from '../../service/notification.service';
 import { Router } from '@angular/router';
+
+interface NumericFormValues {
+  emissions: number;
+  apertureZAxisHeight: number;
+  apertureRadius: number;
+  apertureHeight: number;
+  apertureWidth: number;
+  prismHeight: number;
+  prismWidth: number;
+  prismDepth: number;
+  sphereRadius: number;
+  cylinderHeight: number;
+  cylinderRadius: number;
+  sourceCenterX: number;
+  sourceCenterY: number;
+  sourceCenterZ: number;
+}
 
 @Component({
   selector: 'app-cadastro-simulacao',
@@ -16,6 +33,15 @@ import { Router } from '@angular/router';
 })
 export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
+  currentStep = 1;
+  readonly steps = [
+    { number: 1, title: 'Abertura', description: 'Emissões e geometria do poço' },
+    { number: 2, title: 'Fonte', description: 'Tipo, posição e dimensões' },
+    { number: 3, title: 'Revisão', description: 'Confira e crie a simulação' }
+  ];
+
+  private readonly positiveDecimalValidator = this.decimalValidator(false, false);
+  private readonly signedDecimalValidator = this.decimalValidator(true, true);
 
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
@@ -40,22 +66,23 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
     this.scene = new THREE.Scene();
 
     this.form = new FormGroup({
+      name: new FormControl<string>('', [Validators.required, Validators.maxLength(80)]),
       emissions: new FormControl<number>(1, [Validators.required, Validators.min(1)]),
       apertureType: new FormControl<string>('', Validators.required),
-      apertureZAxisHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      apertureRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      apertureHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      apertureWidth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      apertureZAxisHeight: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      apertureRadius: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      apertureHeight: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      apertureWidth: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
       sourceType: new FormControl<string>('', Validators.required),
-      prismHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      prismWidth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      prismDepth: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      sphereRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      cylinderHeight: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      cylinderRadius: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
-      sourceCenterX: new FormControl<number>(0, Validators.required),
-      sourceCenterY: new FormControl<number>(0, Validators.required),
-      sourceCenterZ: new FormControl<number>(0, Validators.required)
+      prismHeight: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      prismWidth: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      prismDepth: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      sphereRadius: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      cylinderHeight: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      cylinderRadius: new FormControl<number | string>(0, [Validators.required, this.positiveDecimalValidator]),
+      sourceCenterX: new FormControl<number | string>(0, [Validators.required, this.signedDecimalValidator]),
+      sourceCenterY: new FormControl<number | string>(0, [Validators.required, this.signedDecimalValidator]),
+      sourceCenterZ: new FormControl<number | string>(0, [Validators.required, this.signedDecimalValidator])
     });
 
 
@@ -75,22 +102,27 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
   }
 
   async onSubmit(): Promise<void> {
+    if (this.form.invalid) {
+      return;
+    }
+
+    const values = this.getNumericFormValues();
     let aperture: any;
     let sourceType;
     let apertureType;
     if (this.form.get('apertureType')?.value === 'circular') {
       aperture = {
         type: 'circular',
-        radius: this.form.value.apertureRadius,
-        height: this.form.value.apertureZAxisHeight
+        radius: values.apertureRadius,
+        height: values.apertureZAxisHeight
       };
       apertureType = 'CIRCULAR';
     } else if (this.form.get('apertureType')?.value === 'rectangular') {
       aperture = {
         type: 'rectangular',
-        width: this.form.value.apertureWidth,
-        height: this.form.value.apertureZAxisHeight,
-        depth: this.form.value.apertureHeight
+        width: values.apertureWidth,
+        height: values.apertureZAxisHeight,
+        depth: values.apertureHeight
       };
       apertureType = 'RECTANGULAR';
     }
@@ -99,45 +131,46 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
     if (this.form.get('sourceType')?.value === 'prismatica') {
       source = {
         type: 'cuboid',
-        height: this.form.value.prismHeight,
-        width: this.form.value.prismWidth,
-        depth: this.form.value.prismDepth,
-        centerX: this.form.value.sourceCenterX,
-        centerY: this.form.value.sourceCenterY,
-        centerZ: this.form.value.sourceCenterZ
+        height: values.prismHeight,
+        width: values.prismWidth,
+        depth: values.prismDepth,
+        centerX: values.sourceCenterX,
+        centerY: values.sourceCenterY,
+        centerZ: values.sourceCenterZ
       };
       sourceType = 'CUBOID';
     } else if (this.form.get('sourceType')?.value === 'esferica') {
       source = {
         type: 'spherical',
-        radius: this.form.value.sphereRadius,
-        centerX: this.form.value.sourceCenterX,
-        centerY: this.form.value.sourceCenterY,
-        centerZ: this.form.value.sourceCenterZ
+        radius: values.sphereRadius,
+        centerX: values.sourceCenterX,
+        centerY: values.sourceCenterY,
+        centerZ: values.sourceCenterZ
       };
       sourceType = 'SPHERICAL'
     } else if (this.form.get('sourceType')?.value === 'cilindrica') {
       source = {
         type: 'cylindrical',
-        height: this.form.value.cylinderHeight,
-        radius: this.form.value.cylinderRadius,
-        centerX: this.form.value.sourceCenterX,
-        centerY: this.form.value.sourceCenterY,
-        centerZ: this.form.value.sourceCenterZ
+        height: values.cylinderHeight,
+        radius: values.cylinderRadius,
+        centerX: values.sourceCenterX,
+        centerY: values.sourceCenterY,
+        centerZ: values.sourceCenterZ
       };
       sourceType = 'CYLINDRICAL';
     } else if (this.form.get('sourceType')?.value === 'pontual') {
       source = {
         type: 'point',
-        centerX: this.form.value.sourceCenterX,
-        centerY: this.form.value.sourceCenterY,
-        centerZ: this.form.value.sourceCenterZ
+        centerX: values.sourceCenterX,
+        centerY: values.sourceCenterY,
+        centerZ: values.sourceCenterZ
       };
       sourceType = 'POINT';
     }
     const request = {
-      emissions: this.form.value.emissions,
-      sourceHeight: this.form.value.sourceCenterZ,
+      name: this.form.get('name')?.value?.trim(),
+      emissions: values.emissions,
+      sourceHeight: values.sourceCenterZ,
       apertureType: apertureType,
       aperture: aperture,
       sourceType: sourceType,
@@ -159,14 +192,68 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
+  nextStep(): void {
+    if (!this.isStepValid(this.currentStep)) {
+      this.markStepAsTouched(this.currentStep);
+      return;
+    }
+    this.currentStep = Math.min(this.currentStep + 1, this.steps.length);
+  }
+
+  previousStep(): void {
+    this.currentStep = Math.max(this.currentStep - 1, 1);
+  }
+
+  goToStep(step: number): void {
+    if (step <= this.currentStep || this.isStepCompleted(step - 1)) {
+      this.currentStep = step;
+    }
+  }
+
+  isStepCompleted(step: number): boolean {
+    return step < this.currentStep && this.isStepValid(step);
+  }
+
+  isStepValid(step: number): boolean {
+    const controls = step === 1 ? this.apertureControls() : this.sourceControls();
+    return controls.every(control => this.form.get(control)?.valid);
+  }
+
+  apertureControls(): string[] {
+    const controls = ['name', 'emissions', 'apertureType', 'apertureZAxisHeight'];
+    return this.form.get('apertureType')?.value === 'circular'
+      ? [...controls, 'apertureRadius']
+      : [...controls, 'apertureHeight', 'apertureWidth'];
+  }
+
+  sourceControls(): string[] {
+    const controls = ['sourceType', 'sourceCenterX', 'sourceCenterY', 'sourceCenterZ'];
+    switch (this.form.get('sourceType')?.value) {
+      case 'prismatica': return [...controls, 'prismHeight', 'prismWidth', 'prismDepth'];
+      case 'esferica': return [...controls, 'sphereRadius'];
+      case 'cilindrica': return [...controls, 'cylinderHeight', 'cylinderRadius'];
+      case 'pontual': return controls;
+      default: return controls;
+    }
+  }
+
+  markStepAsTouched(step: number): void {
+    const controls = step === 1 ? this.apertureControls() : this.sourceControls();
+    controls.forEach(control => this.form.get(control)?.markAsTouched());
+  }
+
+  cancel(): void {
+    this.router.navigate(['/all']);
+  }
+
   updateApertureFields(value: string) {
     if (value === 'circular') {
-      this.form.get('apertureRadius')?.setValidators(Validators.required);
+      this.form.get('apertureRadius')?.setValidators([Validators.required, this.positiveDecimalValidator]);
       this.form.get('apertureHeight')?.clearValidators();
       this.form.get('apertureWidth')?.clearValidators();
     } else if (value === 'rectangular') {
-      this.form.get('apertureHeight')?.setValidators(Validators.required);
-      this.form.get('apertureWidth')?.setValidators(Validators.required);
+      this.form.get('apertureHeight')?.setValidators([Validators.required, this.positiveDecimalValidator]);
+      this.form.get('apertureWidth')?.setValidators([Validators.required, this.positiveDecimalValidator]);
       this.form.get('apertureRadius')?.clearValidators();
     }
     this.form.get('apertureRadius')?.updateValueAndValidity();
@@ -175,22 +262,22 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
   }
   updateSourceFields(value: string) {
     if (value === 'prismatica') {
-      this.form.get('prismHeight')?.setValidators(Validators.required);
-      this.form.get('prismWidth')?.setValidators(Validators.required);
-      this.form.get('prismDepth')?.setValidators(Validators.required);
+      this.form.get('prismHeight')?.setValidators([Validators.required, this.positiveDecimalValidator]);
+      this.form.get('prismWidth')?.setValidators([Validators.required, this.positiveDecimalValidator]);
+      this.form.get('prismDepth')?.setValidators([Validators.required, this.positiveDecimalValidator]);
       this.form.get('sphereRadius')?.clearValidators();
       this.form.get('cylinderHeight')?.clearValidators();
       this.form.get('cylinderRadius')?.clearValidators();
     } else if (value === 'esferica') {
-      this.form.get('sphereRadius')?.setValidators(Validators.required);
+      this.form.get('sphereRadius')?.setValidators([Validators.required, this.positiveDecimalValidator]);
       this.form.get('prismHeight')?.clearValidators();
       this.form.get('prismWidth')?.clearValidators();
       this.form.get('prismDepth')?.clearValidators();
       this.form.get('cylinderHeight')?.clearValidators();
       this.form.get('cylinderRadius')?.clearValidators();
     } else if (value === 'cilindrica') {
-      this.form.get('cylinderHeight')?.setValidators(Validators.required);
-      this.form.get('cylinderRadius')?.setValidators(Validators.required);
+      this.form.get('cylinderHeight')?.setValidators([Validators.required, this.positiveDecimalValidator]);
+      this.form.get('cylinderRadius')?.setValidators([Validators.required, this.positiveDecimalValidator]);
       this.form.get('prismHeight')?.clearValidators();
       this.form.get('prismWidth')?.clearValidators();
       this.form.get('prismDepth')?.clearValidators();
@@ -393,8 +480,44 @@ export class CadastroSimulacaoComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private toNumber(value: unknown, fallback: number = 0): number {
-    const parsedValue = Number(value);
-    return Number.isFinite(parsedValue) ? parsedValue : fallback;
+    const parsedValue = this.parseDecimal(value);
+    return parsedValue !== null && Number.isFinite(parsedValue) ? parsedValue : fallback;
+  }
+
+  private getNumericFormValues(): NumericFormValues {
+    return Object.fromEntries(
+      Object.entries(this.form.getRawValue()).map(([key, value]) => [key, this.toNumber(value)])
+    ) as unknown as NumericFormValues;
+  }
+
+  private decimalValidator(allowNegative: boolean, allowZero: boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = this.parseDecimal(control.value);
+      if (value === null) {
+        return control.value === null || control.value === '' ? null : { decimal: true };
+      }
+      if ((!allowNegative && value < 0) || (!allowZero && value <= 0)) {
+        return { positive: true };
+      }
+      return null;
+    };
+  }
+
+  private parseDecimal(value: unknown): number | null {
+    if (typeof value === 'number') {
+      return Number.isFinite(value) ? value : null;
+    }
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalizedValue = value.trim().replace(',', '.');
+    if (!/^-?(?:\d+(?:\.\d+)?|\.\d+)$/.test(normalizedValue)) {
+      return null;
+    }
+
+    const parsedValue = Number(normalizedValue);
+    return Number.isFinite(parsedValue) ? parsedValue : null;
   }
 
   onApertureChange(): void {

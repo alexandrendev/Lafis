@@ -13,6 +13,7 @@ import {
 import { Simulation } from '../../entity/Simulation';
 import { InfoItemComponent } from '../../components/info-item/info-item.component';
 import { ActivatedRoute } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ApiService } from '../../service/api/api.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChartType } from 'chart.js';
@@ -25,7 +26,7 @@ import { PreviewSchema, ThreeServiceService } from '../../service/three-service.
 
 @Component({
   selector: 'app-simulation-report',
-  imports: [InfoItemComponent, CommonModule, BaseChartDirective],
+  imports: [InfoItemComponent, CommonModule, BaseChartDirective, RouterLink],
   templateUrl: './simulation-report.component.html',
   styleUrl: './simulation-report.component.scss'
 })
@@ -75,7 +76,9 @@ export class SimulationReportComponent implements OnInit, AfterViewInit, OnDestr
       this.api.findById(id).subscribe({
         next: (simulation: Simulation) => {
           this.simulation = simulation;
-          this.updateCharts();
+          if (this.hasResults) {
+            this.updateCharts();
+          }
           this.threeInitAttempts = 0;
           this.cdr.detectChanges();
           setTimeout(() => {
@@ -107,6 +110,10 @@ export class SimulationReportComponent implements OnInit, AfterViewInit, OnDestr
 
   get apertureType(): string | undefined {
     return this.simulation?.apertureType?.toLowerCase() ?? this.simulation?.context?.aperture?.type;
+  }
+
+  get hasResults(): boolean {
+    return this.simulation?.status === 'FINISHED';
   }
 
   get sourceType(): string | undefined {
@@ -164,6 +171,10 @@ export class SimulationReportComponent implements OnInit, AfterViewInit, OnDestr
     return this.simulation?.duration ?? '-';
   }
 
+  get solidAngleInPi(): number {
+    return this.solidAngle / Math.PI;
+  }
+
   private updateCharts(): void {
     const { escaped, emissions } = this.simulation;
     this.chart.updateChartData(escaped, emissions);
@@ -196,7 +207,17 @@ export class SimulationReportComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   printReport() {
-    window.print();
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    document.body.classList.add('printing-report');
+    requestAnimationFrame(() => setTimeout(() => window.print(), 100));
+  }
+
+  @HostListener('window:afterprint')
+  onAfterPrint(): void {
+    document.body.classList.remove('printing-report');
   }
 
   resetCameraView(): void {

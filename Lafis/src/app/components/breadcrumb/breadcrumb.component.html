@@ -1,0 +1,15 @@
+<nav class="breadcrumb" aria-label="Navegação estrutural">
+  <div class="breadcrumb-content">
+    <span class="context-label">Navegação</span>
+    <div class="breadcrumb-trail">
+      @for (item of items; track item.label; let last = $last) {
+        @if (!last && item.url) {
+          <a [routerLink]="item.url">{{ item.label }}</a>
+          <span class="separator" aria-hidden="true">›</span>
+        } @else {
+          <span class="current" aria-current="page">{{ item.label }}</span>
+        }
+      }
+    </div>
+  </div>
+</nav>

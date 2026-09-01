@@ -30,6 +30,22 @@
   box-shadow: 0 2px 12px rgba(16, 24, 40, 0.08);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-link {
+  color: #315a96;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible { text-decoration: underline; }
+}
+
 .header-title {
   display: flex;
   align-items: center;
@@ -120,11 +136,36 @@ button:hover {
   }
 }
 
+.results-pending {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid #315a96;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1e3a5f;
+
+  strong {
+    font-size: 1rem;
+  }
+
+  span {
+    color: #475569;
+    font-size: 0.92rem;
+  }
+}
+
 .dashboard-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   align-items: stretch;
+}
+
+.dashboard-content:has(.panel-visual:only-child) {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .details-grid {
@@ -225,6 +266,11 @@ button:hover {
     align-items: flex-start;
   }
 
+  .header-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -239,13 +285,22 @@ button:hover {
 }
 
 @media print {
+  .back-link,
   .secondary-btn,
   .report-header button {
     display: none;
   }
 
+  .report-header {
+    padding: 0 0 12px;
+    border: 0;
+    border-bottom: 1px solid #d3d8e2;
+  }
+
   .report-wrapper {
     padding: 0;
+    min-height: 0;
+    background: #fff;
   }
 
   .report-dashboard {
@@ -259,6 +314,29 @@ button:hover {
   .kpi-card {
     box-shadow: none;
     border: 1px solid #d3d8e2;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dashboard-content {
+    display: block;
+  }
+
+  .panel-chart {
+    margin-top: 14px;
+  }
+
+  .panel-visual {
+    display: none;
+  }
+
+  .details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 14px;
   }
 
   .threejs-container {

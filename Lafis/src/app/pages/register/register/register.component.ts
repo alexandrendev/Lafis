@@ -19,9 +19,9 @@ export class RegisterComponent {
 
   registerForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.minLength(8)]),
-    confirmPassword: new FormControl('', [Validators.minLength(8)])
-  });
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(8)])
+  }, { validators: this.passwordMatchValidator });
 
 
   passwordMatchValidator(form: any) {
@@ -38,8 +38,11 @@ export class RegisterComponent {
             this.router.navigate(['/login']);
           });
         },
-        error: (error) => {
-          this.notificationService.showAlert('Erro: ' + error);
+        error: (error: unknown) => {
+          this.notificationService.showAlert(this.api.getErrorMessage(
+            error,
+            'Não foi possível criar a conta. Confira os dados e tente novamente.'
+          ));
         }
       });
       console.log('Dados de registro:', this.registerForm.value);

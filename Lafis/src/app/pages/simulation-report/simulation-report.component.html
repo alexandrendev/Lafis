@@ -5,18 +5,31 @@
                 <div class="header-title">
                     <img src="/assets/logoLafis.png" alt="">
                     <div>
-                        <h1>Relatório da Simulação</h1>
-                        <p>ID: {{ simulation.id }}</p>
+                        <h1>{{ simulation.name || 'Relatório da Simulação' }}</h1>
+                        <p>{{ simulation.name ? 'Relatório da simulação' : 'ID: ' + simulation.id }}</p>
                     </div>
                 </div>
-                <button (click)="printReport()">Imprimir Relatório</button>
+                <div class="header-actions">
+                    <a routerLink="/all" class="back-link">← Minhas simulações</a>
+                    @if (hasResults) {
+                        <button (click)="printReport()">Exportar PDF</button>
+                    }
+                </div>
             </div>
 
+            @if (!hasResults) {
+                <div class="results-pending" role="status">
+                    <strong>{{ simulation.status === 'RUNNING' ? 'Simulação em execução' : 'Resultados ainda não disponíveis' }}</strong>
+                    <span>{{ simulation.status === 'RUNNING' ? 'A configuração e a visualização 3D já estão disponíveis. Os indicadores aparecerão quando o processamento terminar.' : 'Esta simulação ainda não foi executada. Consulte abaixo a configuração e a visualização 3D.' }}</span>
+                </div>
+            }
+
+            @if (hasResults) {
             <div class="kpi-grid">
                 <div class="kpi-card kpi-main">
                     <span class="kpi-label">Ângulo sólido</span>
                     <strong>{{ solidAngle | number:'1.5-5' }}</strong>
-                    <small>sr</small>
+                    <small>sr · ≈ {{ solidAngleInPi | number:'1.2-2' }}π sr</small>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Erro (95%)</span>
@@ -41,8 +54,10 @@
                     <strong>{{ translationService.translateStatus(simulation.status) }}</strong>
                 </div>
             </div>
+            }
 
             <div class="dashboard-content">
+                @if (hasResults) {
                 <div class="panel panel-chart">
                     <div class="panel-header">
                         <h3>Relação Emissões x Vazão</h3>
@@ -51,6 +66,7 @@
                         <canvas baseChart [data]="chartData" [options]="chartOptions" [type]="'pie'"></canvas>
                     </div>
                 </div>
+                }
 
                 <div class="panel panel-visual">
                     <div class="panel-header">

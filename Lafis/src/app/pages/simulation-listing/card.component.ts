@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../service/api/api.service';
 import { CommonModule } from '@angular/common';
-import { SimulacaoDetailModalComponent } from '../../pages/simulacao-detail-modal/simulacao-detail-modal.component';
-import { InfoItemComponent } from '../../components/info-item/info-item.component';
 import { NotificationService } from '../../service/notification.service';
 import { Router } from '@angular/router';
 import { Simulation } from '../../entity/Simulation';
@@ -11,7 +9,7 @@ import { TranslationServiceService } from '../../service/helpers/translation-ser
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule, InfoItemComponent],
+  imports: [CommonModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
@@ -19,6 +17,8 @@ export class CardComponent implements OnInit {
   simulations: Simulation[] = [];
   selectedSimulation!: Simulation;
   isLoading: { [key: string]: boolean } = {};
+  isComparisonMode = false;
+  selectedSimulationIds = new Set<string>();
 
   private readonly api = new ApiService();
 
@@ -28,8 +28,19 @@ export class CardComponent implements OnInit {
     public translationService: TranslationServiceService
   ) {}
 
-  openReport(id: String){
+  openReport(id: string){
+    if (this.isComparisonMode) {
+      this.toggleSelection(id);
+      return;
+    }
     this.router.navigate(['/report', id]);
+  }
+
+  onCardKeydown(event: KeyboardEvent, id: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.openReport(id);
+    }
   }
 
   getApertureType(simulation: Simulation): string | undefined {
@@ -40,7 +51,48 @@ export class CardComponent implements OnInit {
     return simulation?.context?.source?.type;
   }
 
-  async startSimulation(simulationId: string): Promise<void>{
+  getStatusClass(status: string): string {
+    return status?.toLowerCase() ?? 'created';
+  }
+
+  isComparable(simulation: Simulation): boolean {
+    return simulation.status === 'FINISHED';
+  }
+
+  isSelected(id: string): boolean {
+    return this.selectedSimulationIds.has(id);
+  }
+
+  toggleComparisonMode(): void {
+    this.isComparisonMode = !this.isComparisonMode;
+    this.selectedSimulationIds.clear();
+  }
+
+  toggleSelection(id: string): void {
+    const simulation = this.simulations.find(item => item.id === id);
+    if (!simulation || !this.isComparable(simulation)) {
+      return;
+    }
+    if (this.selectedSimulationIds.has(id)) {
+      this.selectedSimulationIds.delete(id);
+    } else if (this.selectedSimulationIds.size < 6) {
+      this.selectedSimulationIds.add(id);
+    } else {
+      this.notificationService.showAlert('Você pode comparar até seis simulações por vez.');
+      return;
+    }
+    this.selectedSimulationIds = new Set(this.selectedSimulationIds);
+  }
+
+  compareSelected(): void {
+    if (this.selectedSimulationIds.size < 2) {
+      return;
+    }
+    this.router.navigate(['/compare'], { queryParams: { ids: [...this.selectedSimulationIds].join(',') } });
+  }
+
+  startSimulation(event: Event, simulationId: string): void {
+    event.stopPropagation();
 
     if (this.isLoading[simulationId]) {
       this.notificationService.showAlert("A simulação já está em andamento.");

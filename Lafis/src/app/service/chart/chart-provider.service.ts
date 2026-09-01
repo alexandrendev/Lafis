@@ -7,6 +7,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 export class ChartProviderService {
   chartOptions: ChartOptions = {
     responsive: true,
+    locale: 'pt-BR',
     plugins: {
       legend: {
         position: 'top',
@@ -43,16 +44,21 @@ export class ChartProviderService {
     const escapedPercent = (escaped / emissions) * 100;
     const emitedPercent = 100 - escapedPercent;
 
+    const percentage = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 2
+    });
+
     this.chartData.labels = [
-      `Vazão: (${escapedPercent.toFixed(2)}%)`,
-      `Emissões: (${emitedPercent.toFixed(2)}%)`
+      `Vazão: (${percentage.format(escapedPercent)}%)`,
+      `Emissões: (${percentage.format(emitedPercent)}%)`
     ];
 
     this.chartData.datasets[0].data = [escaped, emited];
     
     this.pieChartData.labels = [
-      ['Vazão', `${escapedPercent.toFixed(1)}%`],
-      ['Emissões Captadas', `${emitedPercent.toFixed(1)}%`]
+      ['Vazão', `${percentage.format(escapedPercent)}%`],
+      ['Emissões Captadas', `${percentage.format(emitedPercent)}%`]
     ];
     this.pieChartData.datasets[0].data = [escaped, emited];
 

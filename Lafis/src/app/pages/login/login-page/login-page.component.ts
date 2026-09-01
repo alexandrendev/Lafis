@@ -30,8 +30,11 @@ export class LoginPageComponent {
         const returnUrl = this._route.snapshot.queryParamMap.get('returnUrl');
         this._router.navigateByUrl(returnUrl || '/home');
       },
-      error: (error: any) => {
-        this.error = 'Erro ao realizar login. Confira suas credenciais e tente novamente.';
+      error: (error: unknown) => {
+        this.error = this._authService.getErrorMessage(
+          error,
+          'E-mail ou senha inválidos. Confira suas credenciais e tente novamente.'
+        );
       }
     });
   }

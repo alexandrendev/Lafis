@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -37,6 +37,26 @@ export class AuthService {
       },
       {headers},
     );
+  }
+
+  public getErrorMessage(error: unknown, fallback: string): string {
+    if (!(error instanceof HttpErrorResponse)) {
+      return fallback;
+    }
+
+    if (typeof error.error === 'string' && error.error.trim()) {
+      return error.error;
+    }
+
+    if (error.error && typeof error.error === 'object' && typeof error.error.message === 'string') {
+      return error.error.message;
+    }
+
+    if (error.status === 0) {
+      return 'Não foi possível conectar ao servidor. Tente novamente em instantes.';
+    }
+
+    return fallback;
   }
 
   public getToken(): string | null {

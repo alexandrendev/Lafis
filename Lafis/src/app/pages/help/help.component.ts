@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { VideoItemComponent } from '../../components/video-item/video-item.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-help',
-  imports: [VideoItemComponent],
+  imports: [RouterLink],
   templateUrl: './help.component.html',
   styleUrl: './help.component.scss'
 })
-export class HelpComponent {
-
-}
+export class HelpComponent {}

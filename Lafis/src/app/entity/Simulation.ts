@@ -1,5 +1,6 @@
 export interface Simulation {
     id: string;
+    name?: string;
     context?: {
       aperture?: {
         height?: number;

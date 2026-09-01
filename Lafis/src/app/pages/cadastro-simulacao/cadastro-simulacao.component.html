@@ -1,31 +1,50 @@
 <div class="title-container">
   <div class="title-content">
     <h1>Nova Simulação</h1>
-    <p>Configure emissão, abertura e fonte com pré-visualização 3D em tempo real.</p>
+    <p>Configure a geometria por etapas com pré-visualização 3D em tempo real.</p>
   </div>
+  <button type="button" class="cancel-link" (click)="cancel()">Cancelar</button>
 </div>
 
 <div class="container">
   <form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
+    <ol class="stepper" aria-label="Etapas da configuração">
+      @for (step of steps; track step.number) {
+        <li [class.active]="currentStep === step.number" [class.completed]="isStepCompleted(step.number)">
+          <button type="button" (click)="goToStep(step.number)" [disabled]="step.number > currentStep && !isStepCompleted(step.number - 1)">
+            <span class="step-number">{{ isStepCompleted(step.number) ? '✓' : step.number }}</span>
+            <span class="step-copy"><strong>{{ step.title }}</strong><small>{{ step.description }}</small></span>
+          </button>
+        </li>
+      }
+    </ol>
 
-    <div class="form-section">
+    @if (currentStep === 1) {
+    <section class="form-section step-content">
       <h3>Configuração de emissão</h3>
+      <p class="section-description">Defina o número de emissões e a abertura do detector.</p>
       <div class="field-grid">
+        <div class="field-item field-span-full">
+          <label for="name">Nome da simulação:</label>
+          <input id="name" type="text" maxlength="80" placeholder="Ex.: Fonte pontual — variação de altura" formControlName="name">
+          @if(form.get('name')?.touched && form.get('name')?.hasError('required')){<span>Informe um nome para identificar esta simulação.</span>}
+          @if(form.get('name')?.touched && form.get('name')?.hasError('maxlength')){<span>Use no máximo 80 caracteres.</span>}
+        </div>
         <div class="field-item">
           <label for="emissions">Quantidade de emissões:</label>
-          <input type="number" name="emissions" formControlName="emissions">
+          <input id="emissions" type="number" min="1" name="emissions" formControlName="emissions">
           @if(form.get('emissions')?.hasError('required')){<span>Campo obrigatório.</span>} 
           @if(form.get('emissions')?.hasError('min')){<span>O valor deve ser maior que 0</span>}
         </div>
       </div>
-    </div>
 
-    <div class="form-section">
+    <div class="aperture-group">
       <h3>Configuração da abertura</h3>
       <div class="field-grid">
         <div class="field-item">
           <label for="apertures">Tipo de abertura:</label>
-          <select name="apertures" formControlName="apertureType" id="apertureHeight" (change)="onApertureChange()">
+          <select name="apertures" formControlName="apertureType" id="apertureType">
+            <option value="" disabled>Selecione uma abertura</option>
             <option value="circular">Circular</option>
             <option value="rectangular">Retângular</option>
           </select>
@@ -33,9 +52,9 @@
 
         <div class="field-item">
           <label for="apertureZAxisHeight">Altura do poço (cm):</label>
-          <input type="number" name="apertureZAxisHeight" id="apertureZAxisHeight" formControlName="apertureZAxisHeight" (change)="onApertureChange()">
+          <input type="text" inputmode="decimal" name="apertureZAxisHeight" id="apertureZAxisHeight" formControlName="apertureZAxisHeight">
           @if(form.get('apertureZAxisHeight')?.hasError('required')){<span>Campo obrigatório.</span>} 
-          @if(form.get('apertureZAxisHeight')?.hasError('min')){<span>O valor deve ser positivo</span>}
+          @if(form.get('apertureZAxisHeight')?.hasError('positive') || form.get('apertureZAxisHeight')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
         </div>
       </div>
 
@@ -43,9 +62,9 @@
         <div class="field-grid">
           <div class="field-item">
             <label for="apertureRadius">Raio (cm):</label>
-            <input type="number" id="apertureRadius" formControlName="apertureRadius" name="radius">
+            <input type="text" inputmode="decimal" id="apertureRadius" formControlName="apertureRadius" name="radius">
             @if(form.get('apertureRadius')?.hasError('required')){<span>Campo obrigatório.</span>} 
-            @if(form.get('apertureRadius')?.hasError('min')){<span>O valor deve ser positivo</span>}
+            @if(form.get('apertureRadius')?.hasError('positive') || form.get('apertureRadius')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
           </div>
         </div>
       }
@@ -54,27 +73,35 @@
         <div class="field-grid">
           <div class="field-item">
             <label for="apertureHeight">Largura no eixo X (cm):</label>
-            <input type="number" formControlName="apertureHeight" name="apertureHeight">
+            <input type="text" inputmode="decimal" formControlName="apertureHeight" name="apertureHeight">
             @if(form.get('apertureHeight')?.hasError('required')){<span>Campo obrigatório.</span>} 
-            @if(form.get('apertureHeight')?.hasError('min')){<span>O valor deve ser positivo</span>}
+            @if(form.get('apertureHeight')?.hasError('positive') || form.get('apertureHeight')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
           </div>
 
           <div class="field-item">
             <label for="apertureWidth">Largura no eixo Y (cm):</label>
-            <input type="number" formControlName="apertureWidth" name="apertureWidth">
+            <input type="text" inputmode="decimal" formControlName="apertureWidth" name="apertureWidth">
             @if(form.get('apertureWidth')?.hasError('required')){<span>Campo obrigatório.</span>} 
-            @if(form.get('apertureWidth')?.hasError('min')){<span>O valor deve ser positivo</span>}
+            @if(form.get('apertureWidth')?.hasError('positive') || form.get('apertureWidth')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
           </div>
         </div>
       }
     </div>
+      <div class="step-actions step-actions-end">
+        <button type="button" class="primary-action" (click)="nextStep()">Continuar <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+    }
 
-    <div class="form-section">
+    @if (currentStep === 2) {
+    <section class="form-section step-content">
       <h3>Configuração da fonte</h3>
+      <p class="section-description">Escolha a fonte e informe suas dimensões e posição no espaço.</p>
       <div class="field-grid">
         <div class="field-item">
           <label for="fontes">Tipo de fonte:</label>
-          <select name="fontes" formControlName="sourceType" id="fontes" (change)="onSourceTypeChange()">
+          <select name="fontes" formControlName="sourceType" id="fontes">
+            <option value="" disabled>Selecione uma fonte</option>
             <option value="prismatica">Prisma retângular</option>
             <option value="esferica">Esférica</option>
             <option value="cilindrica">Cilíndrica</option>
@@ -88,19 +115,19 @@
         <div class="field-grid three-cols">
           <div class="field-item">
             <label for="sourceCenterX">Centro X:</label>
-            <input type="number" id="sourceCenterX" formControlName="sourceCenterX" name="sourceCenterX">
+            <input type="text" inputmode="decimal" id="sourceCenterX" formControlName="sourceCenterX" name="sourceCenterX">
             @if(form.get('sourceCenterX')?.hasError('required')){<span>Campo obrigatório.</span>}
           </div>
 
           <div class="field-item">
             <label for="sourceCenterY">Centro Y:</label>
-            <input type="number" id="sourceCenterY" formControlName="sourceCenterY" name="sourceCenterY">
+            <input type="text" inputmode="decimal" id="sourceCenterY" formControlName="sourceCenterY" name="sourceCenterY">
             @if(form.get('sourceCenterY')?.hasError('required')){<span>Campo obrigatório.</span>}
           </div>
 
           <div class="field-item">
             <label for="sourceCenterZ">Centro Z:</label>
-            <input type="number" id="sourceCenterZ" formControlName="sourceCenterZ" name="sourceCenterZ">
+            <input type="text" inputmode="decimal" id="sourceCenterZ" formControlName="sourceCenterZ" name="sourceCenterZ">
             @if(form.get('sourceCenterZ')?.hasError('required')){<span>Campo obrigatório.</span>}
           </div>
         </div>
@@ -113,23 +140,23 @@
           <div class="field-grid three-cols">
             <div class="field-item">
               <label for="prismHeight">Altura:</label>
-              <input type="number" id="prismHeight" formControlName="prismHeight" name="prismHeight">
+              <input type="text" inputmode="decimal" id="prismHeight" formControlName="prismHeight" name="prismHeight">
               @if(form.get('prismHeight')?.hasError('required')){<span>Campo obrigatório.</span>} 
-              @if(form.get('prismHeight')?.hasError('min')){<span>O valor deve ser positivo</span>}
+              @if(form.get('prismHeight')?.hasError('positive') || form.get('prismHeight')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
             </div>
 
             <div class="field-item">
               <label for="prismWidth">Largura:</label>
-              <input type="number" id="prismWidth" formControlName="prismWidth" name="prismWidth">
+              <input type="text" inputmode="decimal" id="prismWidth" formControlName="prismWidth" name="prismWidth">
               @if(form.get('prismWidth')?.hasError('required')){<span>Campo obrigatório.</span>} 
-              @if(form.get('prismWidth')?.hasError('min')){<span>O valor deve ser positivo</span>}
+              @if(form.get('prismWidth')?.hasError('positive') || form.get('prismWidth')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
             </div>
 
             <div class="field-item">
               <label for="prismDepth">Profundidade:</label>
-              <input type="number" name="prismDepth" id="prismDepth" formControlName="prismDepth">
+              <input type="text" inputmode="decimal" name="prismDepth" id="prismDepth" formControlName="prismDepth">
               @if(form.get('prismDepth')?.hasError('required')){<span>Campo obrigatório.</span>} 
-              @if(form.get('prismDepth')?.hasError('min')){<span>O valor deve ser positivo</span>}
+              @if(form.get('prismDepth')?.hasError('positive') || form.get('prismDepth')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
             </div>
           </div>
         </div>
@@ -141,9 +168,9 @@
           <div class="field-grid">
             <div class="field-item">
               <label for="sphereRadius">Raio:</label>
-              <input type="number" id="sphereRadius" formControlName="sphereRadius" name="sphereRadius">
+              <input type="text" inputmode="decimal" id="sphereRadius" formControlName="sphereRadius" name="sphereRadius">
               @if(form.get('sphereRadius')?.hasError('required')){<span>Campo obrigatório.</span>} 
-              @if(form.get('sphereRadius')?.hasError('min')){<span>O valor deve ser positivo</span>}
+              @if(form.get('sphereRadius')?.hasError('positive') || form.get('sphereRadius')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
             </div>
           </div>
         </div>
@@ -155,16 +182,16 @@
           <div class="field-grid">
             <div class="field-item">
               <label for="cylinderHeight">Altura:</label>
-              <input type="number" id="cylinderHeight" formControlName="cylinderHeight" name="cylinderHeight">
+              <input type="text" inputmode="decimal" id="cylinderHeight" formControlName="cylinderHeight" name="cylinderHeight">
               @if(form.get('cylinderHeight')?.hasError('required')){<span>Campo obrigatório.</span>} 
-              @if(form.get('cylinderHeight')?.hasError('min')){<span>O valor deve ser positivo</span>}
+              @if(form.get('cylinderHeight')?.hasError('positive') || form.get('cylinderHeight')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
             </div>
 
             <div class="field-item">
               <label for="cylinderRadius">Raio:</label>
-              <input type="number" id="cylinderRadius" formControlName="cylinderRadius" name="cylinderRadius">
+              <input type="text" inputmode="decimal" id="cylinderRadius" formControlName="cylinderRadius" name="cylinderRadius">
               @if(form.get('cylinderRadius')?.hasError('required')){<span>Campo obrigatório.</span>} 
-              @if(form.get('cylinderRadius')?.hasError('min')){<span>O valor deve ser positivo</span>}
+              @if(form.get('cylinderRadius')?.hasError('positive') || form.get('cylinderRadius')?.hasError('decimal')){<span>Informe um valor positivo, usando vírgula ou ponto para decimais.</span>}
             </div>
           </div>
         </div>
@@ -176,12 +203,41 @@
           <span class="position-hint">Somente as coordenadas de centro são necessárias para este tipo.</span>
         </div>
       }
-    </div>
+      <div class="step-actions">
+        <button type="button" class="secondary-action" (click)="previousStep()">← Voltar</button>
+        <button type="button" class="primary-action" (click)="nextStep()">Revisar configuração <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+    }
 
-    <button [disabled]="form.invalid" type="submit">Enviar</button>
-  </form>
-
-  <div class="preview-panel">
+    @if (currentStep === 3) {
+    <section class="form-section step-content review-section">
+      <h3>Revise a configuração</h3>
+      <p class="section-description">A prévia 3D ao lado reflete os parâmetros abaixo em tempo real.</p>
+      <div class="review-grid">
+        <div class="review-card">
+          <span>Nome</span><strong>{{ form.get('name')?.value }}</strong>
+        </div>
+        <div class="review-card">
+          <span>Emissões</span><strong>{{ form.get('emissions')?.value | number }}</strong>
+        </div>
+        <div class="review-card">
+          <span>Abertura</span><strong>{{ form.get('apertureType')?.value === 'circular' ? 'Circular' : 'Retangular' }}</strong>
+        </div>
+        <div class="review-card">
+          <span>Fonte</span><strong>{{ form.get('sourceType')?.value === 'pontual' ? 'Pontual' : form.get('sourceType')?.value }}</strong>
+        </div>
+        <div class="review-card">
+          <span>Centro da fonte</span><strong>({{ form.get('sourceCenterX')?.value }}, {{ form.get('sourceCenterY')?.value }}, {{ form.get('sourceCenterZ')?.value }}) cm</strong>
+        </div>
+      </div>
+      <div class="step-actions">
+        <button type="button" class="secondary-action" (click)="previousStep()">← Ajustar fonte</button>
+        <button [disabled]="form.invalid" class="primary-action" type="submit">Criar simulação</button>
+      </div>
+    </section>
+    }
+  <aside class="preview-panel">
     <div class="preview-toolbar">
       <h3>Pré-visualização 3D</h3>
       <button type="button" class="secondary-btn" (click)="resetCameraView()">Recentralizar câmera</button>
@@ -190,6 +246,7 @@
     <p class="preview-hint">Arraste para girar, botão direito para mover (pan) e scroll para zoom.</p>
 
     <div class="threejs-container"></div>
-  </div>
+  </aside>
+  </form>
 
 </div>
